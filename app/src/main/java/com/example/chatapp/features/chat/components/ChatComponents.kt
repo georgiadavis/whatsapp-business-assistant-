@@ -162,7 +162,7 @@ fun ChatComposer(
                     .padding(end = dimensions.wdsSpacingHalf),
                 shape = shapes.triple, // 24dp border radius
                 color = colors.colorBubbleSurfaceIncoming,
-                shadowElevation = 1.dp
+                shadowElevation = dimensions.wdsElevationSubtle
             ) {
                 Row(
                     modifier = Modifier
@@ -186,7 +186,7 @@ fun ChatComposer(
                     // Left icon container (48dp fixed width, bottom-aligned)
                     Box(
                         modifier = Modifier
-                            .size(48.dp)
+                            .size(dimensions.wdsTouchTargetComfortable)
                             .align(Alignment.Bottom),
                         contentAlignment = Alignment.Center
                     ) {
@@ -278,7 +278,7 @@ fun ChatComposer(
                             painter = expressionIcon,
                             contentDescription = "Expression",
                             tint = colors.colorContentDeemphasized,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(dimensions.wdsIconSizeMedium)
                         )
                     }
 
@@ -331,8 +331,8 @@ fun ChatComposer(
                     Box(
                         modifier = Modifier
                             .size(
-                                width = if (value.isEmpty()) 88.dp else 44.dp,
-                                height = 48.dp
+                                width = if (value.isEmpty()) dimensions.wdsAvatarExtraLarge else dimensions.wdsTouchTargetStandard,
+                                height = dimensions.wdsTouchTargetComfortable
                             )
                             .align(Alignment.Bottom),
                         contentAlignment = Alignment.Center
@@ -397,13 +397,13 @@ fun ChatComposer(
 
                             IconButton(
                                 onClick = onAttachClick,
-                                modifier = Modifier.size(44.dp)
+                                modifier = Modifier.size(dimensions.wdsTouchTargetStandard)
                             ) {
                                 Icon(
                                     painter = attachmentIcon,
                                     contentDescription = "Attach",
                                     tint = colors.colorContentDeemphasized,
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier.size(dimensions.wdsIconSizeMedium)
                                 )
                             }
 
@@ -411,13 +411,13 @@ fun ChatComposer(
                             if (value.isEmpty()) {
                                 IconButton(
                                     onClick = onCameraClick,
-                                    modifier = Modifier.size(44.dp)
+                                    modifier = Modifier.size(dimensions.wdsTouchTargetStandard)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Outlined.PhotoCamera,
                                         contentDescription = "Camera",
                                         tint = colors.colorContentDeemphasized,
-                                        modifier = Modifier.size(24.dp)
+                                        modifier = Modifier.size(dimensions.wdsIconSizeMedium)
                                     )
                                 }
                             }
@@ -429,11 +429,11 @@ fun ChatComposer(
             // Mic/Send button
             FloatingActionButton(
                 onClick = if (value.isNotEmpty()) onSendClick else onMicClick,
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier.size(dimensions.wdsTouchTargetComfortable),
                 containerColor = colors.colorAccent,
                 shape = CircleShape,
                 elevation = FloatingActionButtonDefaults.elevation(
-                    defaultElevation = 1.dp
+                    defaultElevation = dimensions.wdsElevationSubtle
                 )
             ) {
                 if (value.isNotEmpty()) {
@@ -441,14 +441,14 @@ fun ChatComposer(
                         Icons.AutoMirrored.Default.Send,
                         contentDescription = "Send",
                         tint = colors.colorContentOnAccent,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(dimensions.wdsIconSizeMedium)
                     )
                 } else {
                     Icon(
                         Icons.Default.Mic,
                         contentDescription = "Voice",
                         tint = colors.colorContentOnAccent,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(dimensions.wdsIconSizeMedium)
                     )
                 }
             }
@@ -518,7 +518,7 @@ fun MessageItem(
                 modifier = Modifier
                     .widthIn(max = 260.dp)
                     .shadow(
-                        elevation = 1.dp,
+                        elevation = dimensions.wdsElevationSubtle,
                         spotColor = colors.colorBubbleSurfaceOverlay,
                         ambientColor = colors.colorBubbleSurfaceOverlay,
                         shape = shapes.singlePlus

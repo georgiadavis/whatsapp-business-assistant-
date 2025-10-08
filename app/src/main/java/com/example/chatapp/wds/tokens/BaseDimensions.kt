@@ -10,7 +10,32 @@ object BaseDimensions {
     val undefined = 0.dp
     val wdsSizeZero = 0.dp
 
-    // Common icon sizes
+    // Icon sizes
+    val wdsIconSizeExtraSmall = 12.dp
+    val wdsIconSizeSmall = 16.dp
+    val wdsIconSizeMediumSmall = 18.dp
+    val wdsIconSizeMedium = 24.dp
+    val wdsIconSizeLarge = 28.dp
+
+    // Touch target / component sizes
+    val wdsTouchTargetCompact = 40.dp
+    val wdsTouchTargetStandard = 44.dp
+    val wdsTouchTargetComfortable = 48.dp
+    val wdsTouchTargetLarge = 60.dp
+
+    // Avatar sizes
+    val wdsAvatarSmall = 28.dp
+    val wdsAvatarMedium = 40.dp
+    val wdsAvatarLarge = 64.dp
+    val wdsAvatarExtraLarge = 88.dp
+    val wdsAvatarXXL = 120.dp
+
+    // Elevation
+    val wdsElevationNone = 0.dp
+    val wdsElevationSubtle = 1.dp
+    val wdsElevationMedium = 6.dp
+
+    // Common icon sizes (deprecated - use wdsIconSize* instead)
     val iconMedium = 24.dp
 
     // Common text sizes
