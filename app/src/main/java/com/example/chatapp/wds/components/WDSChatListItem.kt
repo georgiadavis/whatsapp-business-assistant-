@@ -424,8 +424,8 @@ private fun formatChatTime(instant: Instant): String {
 
     return when {
         localDateTime.toLocalDate() == now.toLocalDate() -> {
-            // Today - show time
-            localDateTime.format(DateTimeFormatter.ofPattern("h:mm"))
+            // Today - show time with AM/PM
+            localDateTime.format(DateTimeFormatter.ofPattern("h:mm a"))
         }
         localDateTime.toLocalDate() == now.toLocalDate().minusDays(1) -> {
             // Yesterday

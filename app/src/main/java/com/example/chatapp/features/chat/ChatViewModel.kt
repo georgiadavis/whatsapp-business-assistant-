@@ -10,6 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.random.Random
@@ -161,23 +163,26 @@ class ChatViewModel @Inject constructor(
 
     fun markMessagesAsRead() {
         viewModelScope.launch {
-            println("ChatViewModel: markMessagesAsRead called for conversation $conversationId")
-            // Update lastViewedAt to current time
-            val currentTime = System.currentTimeMillis()
-            println("ChatViewModel: Updating lastViewedAt to $currentTime")
-            chatRepository.updateLastViewedAt(conversationId, currentTime)
-            conversationLastViewedAt = currentTime
+            // Use NonCancellable to ensure database updates complete even when navigating away
+            withContext(NonCancellable) {
+                println("ChatViewModel: markMessagesAsRead called for conversation $conversationId")
+                // Update lastViewedAt to current time
+                val currentTime = System.currentTimeMillis()
+                println("ChatViewModel: Updating lastViewedAt to $currentTime")
+                chatRepository.updateLastViewedAt(conversationId, currentTime)
+                conversationLastViewedAt = currentTime
 
-            // Update the conversation's unread count to 0
-            println("ChatViewModel: Updating unread count to 0")
-            chatRepository.updateConversationUnreadCount(conversationId, 0)
-            println("ChatViewModel: Unread count update complete")
+                // Update the conversation's unread count to 0
+                println("ChatViewModel: Updating unread count to 0")
+                chatRepository.updateConversationUnreadCount(conversationId, 0)
+                println("ChatViewModel: Unread count update complete")
 
-            // Reset unread count
-            _uiState.update { it.copy(
-                unreadCount = 0,
-                firstUnreadMessageId = null
-            )}
+                // Reset unread count
+                _uiState.update { it.copy(
+                    unreadCount = 0,
+                    firstUnreadMessageId = null
+                )}
+            }
         }
     }
 

@@ -37,11 +37,11 @@ fun ChatScreen(
         viewModel.loadConversation(conversationId)
     }
 
-    // Mark messages as read when screen is first displayed
-    LaunchedEffect(conversationId) {
-        // Small delay to ensure messages are loaded
-        delay(500)
-        viewModel.markMessagesAsRead()
+    // Mark messages as read when leaving the screen (works for back button, gestures, etc.)
+    DisposableEffect(conversationId) {
+        onDispose {
+            viewModel.markMessagesAsRead()
+        }
     }
 
     // Track if this is the initial load
