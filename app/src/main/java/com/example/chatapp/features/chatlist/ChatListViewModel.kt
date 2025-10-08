@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatapp.data.initializer.DatabaseInitializer
 import com.example.chatapp.data.repository.ChatRepository
+import com.example.chatapp.wds.components.MessageType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

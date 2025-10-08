@@ -23,6 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
  * @property body2Emphasized Used for footnote actions, tappable metadata (14sp, Medium weight)
  * @property body3 Used for body text (12sp)
  * @property body3Emphasized Used for body text actions (12sp, Medium weight)
+ * @property chatListTitle Used for chat list item primary line (17sp, Medium weight)
+ * @property chatHeaderTitle Used for chat header title and collapsed chat info title (18sp, Regular weight)
  */
 @Immutable
 class WdsTypography(
@@ -184,6 +186,24 @@ class WdsTypography(
             fontFamily = FontFamily.SansSerif,
             fontStyle = FontStyle.Normal,
             fontSize = BaseDimensions.wdsFontBody3Size,
+        ),
+    val chatListTitle: TextStyle =
+        TextStyle(
+            fontWeight = FontWeight.Medium,
+            fontFamily = FontFamily.SansSerif,
+            fontStyle = FontStyle.Normal,
+            fontSize = BaseDimensions.wdsFontChatListTitleSize,
+            lineHeight = BaseDimensions.wdsFontChatListTitleLineHeight,
+            letterSpacing = BaseDimensions.wdsFontChatListTitleLetterSpacing,
+        ),
+    val chatHeaderTitle: TextStyle =
+        TextStyle(
+            fontWeight = FontWeight.Normal,
+            fontFamily = FontFamily.SansSerif,
+            fontStyle = FontStyle.Normal,
+            fontSize = BaseDimensions.wdsFontChatHeaderTitleSize,
+            lineHeight = BaseDimensions.wdsFontChatHeaderTitleLineHeight,
+            letterSpacing = BaseDimensions.wdsFontChatHeaderTitleLetterSpacing,
         ),
 )
 

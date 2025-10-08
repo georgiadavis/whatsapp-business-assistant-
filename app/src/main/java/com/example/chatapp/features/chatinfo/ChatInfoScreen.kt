@@ -149,7 +149,7 @@ fun ChatInfoScreen(
                                 } else {
                                     uiState.directChatUser?.displayName ?: "Unknown"
                                 },
-                                style = typography.body1Emphasized,
+                                style = typography.chatHeaderTitle,
                                 color = colors.colorContentDefault,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis

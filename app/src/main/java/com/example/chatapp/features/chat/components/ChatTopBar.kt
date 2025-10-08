@@ -223,7 +223,7 @@ fun ChatTopBar(
                 ) {
                     Text(
                         text = conversationTitle,
-                        style = WdsTheme.typography.body1Emphasized,
+                        style = WdsTheme.typography.chatHeaderTitle,
                         color = colors.colorContentDefault, // Primary text color
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis

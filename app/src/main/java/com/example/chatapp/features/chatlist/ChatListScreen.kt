@@ -56,6 +56,8 @@ import androidx.compose.runtime.compositionLocalOf
 import com.example.chatapp.wds.components.WDSDivider
 import com.example.chatapp.wds.components.WDSContextMenu
 import com.example.chatapp.wds.components.WDSContextMenuItem
+import com.example.chatapp.wds.components.WDSChatListItem
+import com.example.chatapp.wds.components.MessageType
 import androidx.compose.material.icons.outlined.Palette
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toJavaInstant
@@ -182,7 +184,7 @@ fun ChatListScreen(
                         Icon(
                             painter = painterResource(R.drawable.ic_meta_ai),
                             contentDescription = "Meta AI",
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier.size(WdsTheme.dimensions.wdsIconSizeMedium),
                             tint = Color.Unspecified
                         )
                     }
@@ -353,7 +355,7 @@ private fun ChatListMainContent(
                                 ) {
                                     Text(
                                         text = "No results found",
-                                        style = MaterialTheme.typography.bodyMedium,
+                                        style = WdsTheme.typography.body2,
                                         color = WdsTheme.colors.colorContentDeemphasized
                                     )
                                 }
@@ -364,8 +366,19 @@ private fun ChatListMainContent(
                                 ) {
                                     items(filteredConversations.size) { index ->
                                         val conversation = filteredConversations[index]
-                                        ChatListItem(
-                                            conversation = conversation,
+                                        WDSChatListItem(
+                                            title = conversation.title,
+                                            subtitle = conversation.subtitle,
+                                            avatarUrl = conversation.avatarUrl,
+                                            lastMessage = conversation.lastMessage,
+                                            lastMessageTime = conversation.lastMessageTime,
+                                            lastMessageSender = conversation.lastMessageSender,
+                                            lastMessageType = conversation.lastMessageType,
+                                            unreadCount = conversation.unreadCount,
+                                            isGroup = conversation.isGroup,
+                                            isSentByUser = conversation.isSentByUser,
+                                            isRead = conversation.isRead,
+                                            isMissedCall = conversation.isMissedCall,
                                             onClick = {
                                                 onChatClick(conversation.id)
                                                 onSearchActiveChange(false)
@@ -427,11 +440,22 @@ private fun ChatListMainContent(
                     }
                 }
                 
-                ChatListItem(
-                    conversation = conversation,
-                    onClick = { 
+                WDSChatListItem(
+                    title = conversation.title,
+                    subtitle = conversation.subtitle,
+                    avatarUrl = conversation.avatarUrl,
+                    lastMessage = conversation.lastMessage,
+                    lastMessageTime = conversation.lastMessageTime,
+                    lastMessageSender = conversation.lastMessageSender,
+                    lastMessageType = conversation.lastMessageType,
+                    unreadCount = conversation.unreadCount,
+                    isGroup = conversation.isGroup,
+                    isSentByUser = conversation.isSentByUser,
+                    isRead = conversation.isRead,
+                    isMissedCall = conversation.isMissedCall,
+                    onClick = {
                         println("ChatListScreen: Clicked on ${conversation.title} with ID: ${conversation.id}")
-                        onChatClick(conversation.id) 
+                        onChatClick(conversation.id)
                     }
                 )
                 }
@@ -586,14 +610,14 @@ private fun ArchivedRow(
         horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingDouble)
     ) {
         Box(
-            modifier = Modifier.size(48.dp),
+            modifier = Modifier.size(WdsTheme.dimensions.wdsTouchTargetComfortable),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Outlined.Archive,
                 contentDescription = "Archived",
                 tint = WdsTheme.colors.colorContentDeemphasized,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(WdsTheme.dimensions.wdsIconSizeMedium)
             )
         }
         
@@ -610,378 +634,6 @@ private fun ArchivedRow(
                 style = WdsTheme.typography.body3Emphasized,
                 color = WdsTheme.colors.colorContentDeemphasized
             )
-        }
-    }
-}
-
-@Composable
-private fun Avatar(
-    avatarUrl: String?,
-    title: String,
-    modifier: Modifier = Modifier
-) {
-    var imageLoadFailed by remember { mutableStateOf(false) }
-    
-    if (avatarUrl != null && !imageLoadFailed) {
-        when {
-            avatarUrl.startsWith("drawable://") -> {
-                // Handle local drawable resources
-                val drawableResId = when (avatarUrl.removePrefix("drawable://")) {
-                    "emoji_thinking_monocle" -> R.drawable.emoji_thinking_monocle
-                    "emoji_microscope" -> R.drawable.emoji_microscope
-                    else -> null
-                }
-                
-                if (drawableResId != null) {
-                    Image(
-                        painter = painterResource(id = drawableResId),
-                        contentDescription = "Profile picture of $title",
-                        modifier = modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(WdsTheme.colors.colorSurfaceEmphasized, CircleShape),
-                        contentScale = ContentScale.Fit
-                    )
-                } else {
-                    DefaultAvatar(title = title, modifier = modifier)
-                }
-            }
-            else -> {
-                // Handle network URLs
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(avatarUrl)
-                        .crossfade(true)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .diskCachePolicy(CachePolicy.ENABLED)
-                        .networkCachePolicy(CachePolicy.ENABLED)
-                        .allowHardware(true)
-                        .build(),
-                    contentDescription = "Profile picture of $title",
-                    modifier = modifier
-                        .size(48.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop,
-                    onError = {
-                        imageLoadFailed = true
-                    }
-                )
-            }
-        }
-    } else {
-        // Fallback to solid color avatar with initials
-        DefaultAvatar(title = title, modifier = modifier)
-    }
-}
-
-@Composable
-private fun EnhancedAvatar(
-    title: String,
-    seed: String,
-    modifier: Modifier = Modifier
-) {
-    // Generate gradient colors based on seed for variety
-    val colors = generateGradientColors(seed)
-    val initials = generateInitials(title)
-    
-    Box(
-        modifier = modifier
-            .size(48.dp)
-            .clip(CircleShape)
-            .background(
-                brush = Brush.linearGradient(
-                    colors = colors,
-                    start = Offset(0f, 0f),
-                    end = Offset(100f, 100f)
-                )
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = initials,
-            style = WdsTheme.typography.headline2,
-            color = WdsTheme.colors.colorAlwaysWhite
-        )
-    }
-}
-
-private fun generateInitials(name: String): String {
-    val parts = name.trim().split(" ")
-    return when {
-        parts.size >= 2 -> "${parts[0].take(1)}${parts[1].take(1)}".uppercase()
-        parts[0].length >= 2 -> parts[0].take(2).uppercase()
-        else -> parts[0].take(1).uppercase()
-    }
-}
-
-@Composable
-private fun generateGradientColors(seed: String): List<Color> {
-    val hash = seed.hashCode().absoluteValue
-    val colors = WdsTheme.colors
-
-    val colorSchemes = listOf(
-        // Using WDS semantic colors for avatar gradients
-        listOf(colors.colorAccentEmphasized, colors.colorAccentDeemphasized),
-        listOf(colors.colorPositive, colors.colorAccentEmphasized),
-        listOf(colors.colorAccentEmphasized, colors.colorPositive),
-        listOf(colors.colorWarning, colors.colorAccentEmphasized),
-        listOf(colors.colorAccentDeemphasized, colors.colorPositive),
-        listOf(colors.colorPositive, colors.colorAccentDeemphasized),
-        listOf(colors.colorAccentEmphasized, colors.colorWarning),
-        listOf(colors.colorWarning, colors.colorPositive)
-    )
-
-    return colorSchemes[hash % colorSchemes.size]
-}
-
-@Composable
-private fun DefaultAvatar(title: String, modifier: Modifier = Modifier) {
-    Surface(
-        modifier = modifier
-            .size(48.dp)
-            .clip(CircleShape),
-        color = WdsTheme.colors.colorSurfaceEmphasized
-    ) {
-        Box(
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = title.take(1).uppercase(),
-                style = MaterialTheme.typography.titleMedium,
-                color = WdsTheme.colors.colorContentDefault
-            )
-        }
-    }
-}
-
-private fun generateColorFromName(name: String): Color {
-    val colors = listOf(
-        BaseColors.wdsBrown500,
-        BaseColors.wdsCobalt500,
-        BaseColors.wdsCoolGray500,
-        BaseColors.wdsCream500,
-        BaseColors.wdsEmerald500,
-        BaseColors.wdsGreen500,
-        BaseColors.wdsNeutralGray500,
-        BaseColors.wdsOrange500,
-        BaseColors.wdsPink500,
-        BaseColors.wdsPurple500,
-        BaseColors.wdsRed500,
-        BaseColors.wdsSkyBlue500,
-        BaseColors.wdsTeal500,
-        BaseColors.wdsWarmGray500,
-        BaseColors.wdsYellow500
-    )
-
-    val index = name.hashCode().absoluteValue % colors.size
-    return colors[index]
-}
-
-private fun isColorDark(color: Color): Boolean {
-    // Simple brightness calculation
-    val brightness = (color.red * 299 + color.green * 587 + color.blue * 114) / 1000
-    return brightness < 128
-}
-
-@Composable
-private fun ChatListItem(
-    conversation: ConversationUiModel,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(
-                horizontal = WdsTheme.dimensions.wdsSpacingDouble,
-                vertical = WdsTheme.dimensions.wdsSpacingSinglePlus
-            ),
-        horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingDouble)
-    ) {
-        // Avatar - Now displays real profile images or falls back to initials
-        Avatar(
-            avatarUrl = conversation.avatarUrl,
-            title = conversation.title
-        )
-
-        // Content
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingHalf)
-        ) {
-            // Header Row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingQuarter)
-                ) {
-                    Text(
-                        text = conversation.title,
-                        style = WdsTheme.typography.body1Emphasized,
-                        color = WdsTheme.colors.colorContentDefault,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    
-                    // Show subtitle if present (for disambiguation)
-                    conversation.subtitle?.let { subtitle ->
-                        Text(
-                            text = subtitle,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = WdsTheme.colors.colorContentDeemphasized,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
-                
-                Text(
-                    text = formatTime(conversation.lastMessageTime),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = if (conversation.hasUnread) WdsTheme.colors.colorAccent else WdsTheme.colors.colorContentDeemphasized
-                )
-            }
-            
-            // Message Row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingHalf),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Status icon (if sent by user)
-                if (conversation.isSentByUser) {
-                    Icon(
-                        imageVector = Icons.Default.Done,
-                        contentDescription = null,
-                        tint = if (conversation.isRead) WdsTheme.colors.colorContentRead else WdsTheme.colors.colorContentDeemphasized,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-                
-                // Sender name (for groups)
-                if (conversation.isGroup && conversation.lastMessageSender != null) {
-                    Text(
-                        text = "${conversation.lastMessageSender}:",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = WdsTheme.colors.colorContentDeemphasized
-                    )
-                }
-                
-                // Message content
-                when (conversation.lastMessageType) {
-                    MessageType.PHOTO -> {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_photo_message),
-                            contentDescription = null,
-                            tint = WdsTheme.colors.colorContentDeemphasized,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = "Photo",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = WdsTheme.colors.colorContentDeemphasized,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
-                    MessageType.VIDEO -> {
-                        Icon(
-                            imageVector = Icons.Outlined.Videocam,
-                            contentDescription = null,
-                            tint = WdsTheme.colors.colorContentDeemphasized,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = "Video",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = WdsTheme.colors.colorContentDeemphasized,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
-                    MessageType.STICKER -> {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_sticker_message),
-                            contentDescription = null,
-                            tint = WdsTheme.colors.colorContentDeemphasized,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = "Sticker",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = WdsTheme.colors.colorContentDeemphasized,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
-                    MessageType.FILE, MessageType.DOCUMENT -> {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_file_message),
-                            contentDescription = null,
-                            tint = WdsTheme.colors.colorContentDeemphasized,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = conversation.lastMessage
-                                .removePrefix("📎 ")
-                                .removePrefix("🔗 ")
-                                .ifEmpty { "Document" },
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = WdsTheme.colors.colorContentDeemphasized,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
-                    MessageType.VOICE_CALL, MessageType.VIDEO_CALL -> {
-                        Icon(
-                            imageVector = Icons.Default.Phone,
-                            contentDescription = null,
-                            tint = if (conversation.isMissedCall) WdsTheme.colors.colorNegative else WdsTheme.colors.colorContentDeemphasized,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = if (conversation.isMissedCall) "Missed Call" else "Call",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = if (conversation.isMissedCall) WdsTheme.colors.colorNegative else WdsTheme.colors.colorContentDeemphasized,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
-                    else -> {
-                        Text(
-                            text = conversation.lastMessage,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = WdsTheme.colors.colorContentDeemphasized,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-                
-                // Unread badge
-                if (conversation.unreadCount > 0) {
-                    Surface(
-                        shape = CircleShape,
-                        color = WdsTheme.colors.colorAccent
-                    ) {
-                        Text(
-                            text = conversation.unreadCount.toString(),
-                            style = WdsTheme.typography.body3Emphasized,
-                            color = WdsTheme.colors.colorContentOnAccent,
-                            modifier = Modifier.padding(horizontal = WdsTheme.dimensions.wdsSpacingHalfPlus, vertical = WdsTheme.dimensions.wdsSpacingQuarter)
-                        )
-                    }
-                }
-            }
         }
     }
 }
@@ -1056,7 +708,7 @@ private fun ChatListBottomBar(
                     badge = {
                         if (hasUpdates) {
                             Badge(
-                                modifier = Modifier.size(8.dp),
+                                modifier = Modifier.size(WdsTheme.dimensions.wdsSpacingSingle),
                                 containerColor = WdsTheme.colors.colorAccent
                             )
                         }
@@ -1188,45 +840,25 @@ private fun EncryptionNotice() {
             imageVector = Icons.Default.Lock,
             contentDescription = null,
             tint = WdsTheme.colors.colorContentDeemphasized,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(WdsTheme.dimensions.wdsIconSizeMediumSmall)
         )
         Spacer(modifier = Modifier.width(WdsTheme.dimensions.wdsSpacingHalf))
         Text(
             text = "Your personal messages are ",
-            style = MaterialTheme.typography.labelSmall,
+            style = WdsTheme.typography.body3,
             color = WdsTheme.colors.colorContentDeemphasized
         )
         Text(
             text = "end-to-end encrypted",
-            style = MaterialTheme.typography.labelSmall,
+            style = WdsTheme.typography.body3,
             color = WdsTheme.colors.colorPositive
         )
     }
-    
+
     Divider(
         color = WdsTheme.colors.colorDivider,
-        thickness = 0.5.dp
+        thickness = WdsTheme.dimensions.wdsBorderWidthThin
     )
-}
-
-private fun formatTime(instant: Instant): String {
-    val localDateTime = LocalDateTime.ofInstant(instant.toJavaInstant(), ZoneId.systemDefault())
-    val now = LocalDateTime.now()
-    
-    return when {
-        localDateTime.toLocalDate() == now.toLocalDate() -> {
-            // Today - show time
-            localDateTime.format(DateTimeFormatter.ofPattern("h:mm"))
-        }
-        localDateTime.toLocalDate() == now.toLocalDate().minusDays(1) -> {
-            // Yesterday
-            "Yesterday"
-        }
-        else -> {
-            // Show date
-            localDateTime.format(DateTimeFormatter.ofPattern("M/d/yy"))
-        }
-    }
 }
 
 // UI Models and Enums
@@ -1250,8 +882,4 @@ data class ConversationUiModel(
 
 enum class ChatFilter {
     ALL, UNREAD, FAVORITES, GROUPS
-}
-
-enum class MessageType {
-    TEXT, PHOTO, VIDEO, AUDIO, DOCUMENT, LOCATION, VOICE_CALL, VIDEO_CALL, FILE, STICKER, GIF, VOICE_NOTE
 }

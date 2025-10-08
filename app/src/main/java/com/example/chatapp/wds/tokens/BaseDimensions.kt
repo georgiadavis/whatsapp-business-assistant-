@@ -26,6 +26,7 @@ object BaseDimensions {
     // Avatar sizes
     val wdsAvatarSmall = 28.dp
     val wdsAvatarMedium = 40.dp
+    val wdsAvatarMediumLarge = 48.dp
     val wdsAvatarLarge = 64.dp
     val wdsAvatarExtraLarge = 88.dp
     val wdsAvatarXXL = 120.dp
@@ -81,6 +82,8 @@ object BaseDimensions {
     val wdsFontBody1Size = 16.sp
     val wdsFontBody2Size = 14.sp
     val wdsFontBody3Size = 12.sp
+    val wdsFontChatListTitleSize = 17.sp
+    val wdsFontChatHeaderTitleSize = 18.sp
 
     // Typography - Line heights
     val wdsFontLargeTitle1LineHeight = 40.sp
@@ -90,6 +93,8 @@ object BaseDimensions {
     val wdsFontBody1LineHeight = 24.sp
     val wdsFontBody2LineHeight = 22.sp
     val wdsFontBody3LineHeight = 16.sp
+    val wdsFontChatListTitleLineHeight = 22.sp
+    val wdsFontChatHeaderTitleLineHeight = 28.sp
 
     // Typography - Letter spacing
     val wdsFontLargeTitle1LetterSpacing = 0.em
@@ -102,5 +107,7 @@ object BaseDimensions {
     val wdsFontBody2EmphasizedLetterSpacing = 0.01071428.em
     val wdsFontBody3LetterSpacing = 0.01666666.em
     val wdsFontBody3EmphasizedLetterSpacing = 0.02083333.em
+    val wdsFontChatListTitleLetterSpacing = 0.em
+    val wdsFontChatHeaderTitleLetterSpacing = 0.00833333.em
 }
 

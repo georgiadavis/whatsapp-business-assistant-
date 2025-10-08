@@ -28,7 +28,8 @@ import androidx.compose.ui.unit.Dp
  *
  * Avatar sizes:
  * - Small (28dp) - Small avatars
- * - Medium (40dp) - Medium avatars
+ * - Medium (40dp) - Medium avatars (chat header)
+ * - MediumLarge (48dp) - Medium-large avatars (chat list)
  * - Large (64dp) - Large avatars
  * - ExtraLarge (88dp) - Extra large avatars
  * - XXL (120dp) - Maximum avatar size
@@ -71,6 +72,7 @@ class WdsDimensions {
     // Avatar sizes
     val wdsAvatarSmall: Dp = BaseDimensions.wdsAvatarSmall
     val wdsAvatarMedium: Dp = BaseDimensions.wdsAvatarMedium
+    val wdsAvatarMediumLarge: Dp = BaseDimensions.wdsAvatarMediumLarge
     val wdsAvatarLarge: Dp = BaseDimensions.wdsAvatarLarge
     val wdsAvatarExtraLarge: Dp = BaseDimensions.wdsAvatarExtraLarge
     val wdsAvatarXXL: Dp = BaseDimensions.wdsAvatarXXL
