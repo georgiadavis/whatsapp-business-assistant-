@@ -83,7 +83,8 @@ class ChatViewModel @Inject constructor(
                     _uiState.update { it.copy(
                         conversationTitle = conversation.title ?: "",
                         conversationAvatar = conversation.avatarUrl,
-                        isGroupChat = true
+                        isGroupChat = true,
+                        isBusinessChat = conversation.isBusinessChat
                     )}
 
                     // Load participant info for group chat
@@ -115,6 +116,7 @@ class ChatViewModel @Inject constructor(
                                 conversationTitle = user.displayName,
                                 conversationAvatar = user.avatarUrl,
                                 isGroupChat = false,
+                                isBusinessChat = conversation.isBusinessChat,
                                 isOnline = false,
                                 lastSeen = formatLastSeen(user.lastSeen)
                             )}
@@ -212,6 +214,7 @@ data class ChatUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val isGroupChat: Boolean = false,
+    val isBusinessChat: Boolean = false,
     val participantInfo: Map<String, ParticipantInfo> = emptyMap(),
     val unreadCount: Int = 0,
     val firstUnreadMessageId: String? = null

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "6bbdab06e97d2f6a5e74a72b20b592ef",
+    "identityHash": "ef54425b674027d0725390d12af3a02c",
     "entities": [
       {
         "tableName": "users",
@@ -62,7 +62,7 @@
       },
       {
         "tableName": "conversations",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`conversationId` TEXT NOT NULL, `title` TEXT, `isGroup` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, `lastMessageId` TEXT, `lastMessageText` TEXT, `lastMessageTimestamp` INTEGER, `unreadCount` INTEGER NOT NULL, `isPinned` INTEGER NOT NULL, `isMuted` INTEGER NOT NULL, `avatarUrl` TEXT, `lastViewedAt` INTEGER NOT NULL, PRIMARY KEY(`conversationId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`conversationId` TEXT NOT NULL, `title` TEXT, `isGroup` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, `lastMessageId` TEXT, `lastMessageText` TEXT, `lastMessageTimestamp` INTEGER, `unreadCount` INTEGER NOT NULL, `isPinned` INTEGER NOT NULL, `isMuted` INTEGER NOT NULL, `isBusinessChat` INTEGER NOT NULL, `avatarUrl` TEXT, `lastViewedAt` INTEGER NOT NULL, PRIMARY KEY(`conversationId`))",
         "fields": [
           {
             "fieldPath": "conversationId",
@@ -127,6 +127,12 @@
           {
             "fieldPath": "isMuted",
             "columnName": "isMuted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isBusinessChat",
+            "columnName": "isBusinessChat",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -452,7 +458,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6bbdab06e97d2f6a5e74a72b20b592ef')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ef54425b674027d0725390d12af3a02c')"
     ]
   }
 }

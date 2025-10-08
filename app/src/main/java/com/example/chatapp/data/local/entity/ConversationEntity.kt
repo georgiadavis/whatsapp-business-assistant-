@@ -17,6 +17,7 @@ data class ConversationEntity(
     val unreadCount: Int = 0,
     val isPinned: Boolean = false,
     val isMuted: Boolean = false,
+    val isBusinessChat: Boolean = false, // For business conversations (shows different security message)
     val avatarUrl: String? = null, // For group chats
     val lastViewedAt: Long = 0L // Timestamp when user last viewed this conversation
 )

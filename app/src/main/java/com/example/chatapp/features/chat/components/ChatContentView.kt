@@ -56,6 +56,7 @@ fun ChatContentView(
 ) {
     // Cache theme lookups for performance
     val colors = WdsTheme.colors
+    val dimensions = WdsTheme.dimensions
 
     val scope = rememberCoroutineScope()
     val density = LocalDensity.current
@@ -330,23 +331,30 @@ fun ChatContentView(
                     ),
                     verticalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingQuarter)
                 ) {
-                    // Add encryption notice for groups
+                    // Add security message for all chats (E2EE or Business)
+                    item {
+                        com.example.chatapp.wds.components.WDSSystemMessage(
+                            type = if (uiState.isBusinessChat) {
+                                com.example.chatapp.wds.components.WDSSystemMessageType.SECURITY_BUSINESS
+                            } else {
+                                com.example.chatapp.wds.components.WDSSystemMessageType.SECURITY_E2EE
+                            },
+                            onLearnMoreClick = { /* TODO: Open info dialog */ },
+                            modifier = Modifier.padding(bottom = WdsTheme.dimensions.wdsSpacingSingle)
+                        )
+                    }
+
+                    // Add "You joined" message for group chats
                     if (uiState.isGroupChat) {
                         item {
-                            EncryptionNotice(
-                                modifier = Modifier.padding(bottom = WdsTheme.dimensions.wdsSpacingSingle)
-                            )
-                        }
-
-                        // System message for group creation
-                        item {
-                            SystemMessage(
-                                text = "You joined \"${uiState.conversationTitle}\"",
+                            com.example.chatapp.wds.components.WDSSystemMessage(
+                                type = com.example.chatapp.wds.components.WDSSystemMessageType.GROUP_YOU_JOINED,
+                                groupName = uiState.conversationTitle,
                                 modifier = Modifier.padding(bottom = WdsTheme.dimensions.wdsSpacingSingle)
                             )
                         }
                     }
-                    
+
                     // Add messages with proper pill placement
                     itemsIndexed(
                         items = messages,
@@ -389,15 +397,35 @@ fun ChatContentView(
                             if (needsExtraSpacing) {
                                 Spacer(modifier = Modifier.height(WdsTheme.dimensions.wdsSpacingHalfPlus))
                             }
-                            
-                            MessageItem(
-                                message = message,
-                                isFromCurrentUser = isFromCurrentUser,
-                                isGroupChat = uiState.isGroupChat,
-                                senderName = senderInfo?.displayName ?: "Unknown",
-                                senderAvatar = senderInfo?.avatarUrl,
-                                showSenderInfo = isFirstInSequence
-                            )
+
+                            // Handle SYSTEM messages separately
+                            if (message.messageType == com.example.chatapp.data.local.entity.MessageType.SYSTEM) {
+                                // Parse content to determine system message type
+                                val systemMessageType = when {
+                                    message.content.contains("was added") -> {
+                                        // Extract person name (format: "Name was added")
+                                        val personName = message.content.substringBefore(" was added")
+                                        com.example.chatapp.wds.components.WDSSystemMessage(
+                                            type = com.example.chatapp.wds.components.WDSSystemMessageType.GROUP_PERSON_ADDED,
+                                            personName = personName,
+                                            modifier = Modifier.padding(vertical = WdsTheme.dimensions.wdsSpacingQuarter)
+                                        )
+                                    }
+                                    else -> null
+                                }
+
+                                systemMessageType
+                            } else {
+                                // Regular message
+                                MessageItem(
+                                    message = message,
+                                    isFromCurrentUser = isFromCurrentUser,
+                                    isGroupChat = uiState.isGroupChat,
+                                    senderName = senderInfo?.displayName ?: "Unknown",
+                                    senderAvatar = senderInfo?.avatarUrl,
+                                    showSenderInfo = isFirstInSequence
+                                )
+                            }
                         }
                     }
                 }
@@ -440,29 +468,30 @@ fun ChatContentView(
                         containerColor = WdsTheme.colors.colorBubbleSurfaceIncoming,
                         contentColor = WdsTheme.colors.colorContentDeemphasized,
                         modifier = Modifier
-                            .size(32.dp)
+                            .size(32.dp) // Custom FAB size for compact scroll button
                             .shadow(
-                                elevation = 1.dp, 
-                                spotColor = WdsTheme.colors.colorBubbleSurfaceOverlay, 
+                                elevation = WdsTheme.dimensions.wdsElevationSubtle,
+                                spotColor = WdsTheme.colors.colorBubbleSurfaceOverlay,
                                 ambientColor = WdsTheme.colors.colorBubbleSurfaceOverlay,
                                 shape = CircleShape
                             )
                             .shadow(
-                                elevation = 0.dp, 
-                                spotColor = WdsTheme.colors.colorBubbleSurfaceOverlay, 
+                                elevation = WdsTheme.dimensions.wdsElevationNone,
+                                spotColor = WdsTheme.colors.colorBubbleSurfaceOverlay,
                                 ambientColor = WdsTheme.colors.colorBubbleSurfaceOverlay,
                                 shape = CircleShape
                             ),
                         shape = CircleShape,
                         elevation = FloatingActionButtonDefaults.elevation(
-                            defaultElevation = 0.dp,
-                            pressedElevation = 0.dp
+                            defaultElevation = WdsTheme.dimensions.wdsElevationNone,
+                            pressedElevation = WdsTheme.dimensions.wdsElevationNone
                         )
                     ) {
                         // Custom double chevron icon
+                        val iconSize = dimensions.wdsIconSizeMediumSmall
                         val doubleChevronIcon = ImageVector.Builder(
-                            defaultWidth = 18.dp,
-                            defaultHeight = 18.dp,
+                            defaultWidth = iconSize,
+                            defaultHeight = iconSize,
                             viewportWidth = 18f,
                             viewportHeight = 18f
                         ).path(
@@ -513,11 +542,11 @@ fun ChatContentView(
                             lineTo(9.00002f, 13.1813f)
                             close()
                         }.build()
-                        
+
                         Icon(
                             imageVector = doubleChevronIcon,
                             contentDescription = "Scroll to bottom",
-                            modifier = Modifier.size(18.dp),
+                            modifier = Modifier.size(iconSize),
                             tint = WdsTheme.colors.colorContentDeemphasized
                         )
                     }

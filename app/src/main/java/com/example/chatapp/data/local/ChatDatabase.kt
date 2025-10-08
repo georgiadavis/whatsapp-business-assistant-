@@ -16,7 +16,7 @@ import com.example.chatapp.data.local.entity.*
         MessageEntity::class,
         ConversationParticipantEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

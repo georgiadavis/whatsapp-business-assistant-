@@ -2138,7 +2138,7 @@ object ChatDataGenerator {
                     guaranteedUnreadCount
                 )
                 messages.addAll(groupMessages)
-                
+
                 // Add additional unread messages for group chats if needed
                 if (guaranteedUnreadCount > 0) {
                     val otherGroupParticipants = conversationParticipants.filter { it.userId != currentUserId }
@@ -2151,6 +2151,53 @@ object ChatDataGenerator {
                             groupMessages.lastOrNull()?.messageId
                         )
                         messages.addAll(unreadMessages)
+                    }
+                }
+
+                // Add SYSTEM messages for 20% of group chats
+                // These show up as "Person was added" messages
+                if (Random.nextFloat() < 0.2) {
+                    val otherGroupParticipants = conversationParticipants.filter { it.userId != currentUserId }
+                    if (otherGroupParticipants.isNotEmpty() && groupMessages.isNotEmpty()) {
+                        // Add 1-2 system messages at random points in the conversation
+                        val systemMessageCount = Random.nextInt(1, 3) // 1 or 2 messages
+
+                        for (sysIdx in 0 until systemMessageCount) {
+                            // Pick a random participant to be "added"
+                            val addedParticipant = otherGroupParticipants.random()
+
+                            // Find the corresponding user entity to get their name
+                            // For now, extract name from userId (format is "user_N")
+                            val participantName = addedParticipant.userId
+                                .substringAfter("user_")
+                                .let { userId ->
+                                    // Use the first names list to get a realistic name
+                                    val index = userId.toIntOrNull()?.rem(firstNames.size) ?: 0
+                                    firstNames[index]
+                                }
+
+                            // Insert system message at a random point (not at the very beginning)
+                            // Pick a timestamp somewhere in the middle of the conversation
+                            val minTimestamp = groupMessages.first().timestamp
+                            val maxTimestamp = groupMessages.last().timestamp
+                            val timeRange = maxTimestamp - minTimestamp
+
+                            // Place system messages in the middle 70% of the timeline
+                            val systemTimestamp = minTimestamp + (timeRange * (0.15 + Random.nextDouble() * 0.7)).toLong()
+
+                            val systemMessage = MessageEntity(
+                                messageId = UUID.randomUUID().toString(),
+                                conversationId = conversation.conversationId,
+                                senderId = currentUserId, // System messages use current user to satisfy foreign key
+                                content = "$participantName was added",
+                                timestamp = systemTimestamp,
+                                messageType = MessageType.SYSTEM,
+                                isRead = true,
+                                isDelivered = true
+                            )
+
+                            messages.add(systemMessage)
+                        }
                     }
                 }
             } else {
