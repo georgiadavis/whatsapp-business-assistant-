@@ -317,7 +317,7 @@ fun ChatComposer(
                                         Text(
                                             "Message",
                                             style = WdsTheme.typography.chatBody1.copy(
-                                                color = colors.colorBubbleContentDeemphasized
+                                                color = colors.colorContentDeemphasized
                                             )
                                         )
                                     }

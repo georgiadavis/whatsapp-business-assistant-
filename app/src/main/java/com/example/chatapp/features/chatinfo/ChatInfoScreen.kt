@@ -1,19 +1,30 @@
 package com.example.chatapp.features.chatinfo
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import com.example.chatapp.R
 import com.example.chatapp.features.chatinfo.components.*
 import com.example.chatapp.wds.theme.WdsTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -28,9 +39,30 @@ fun ChatInfoScreen(
     val uiState by viewModel.uiState.collectAsState()
     val isDarkTheme = isSystemInDarkTheme()
 
+    // Cache theme lookups
+    val colors = WdsTheme.colors
+    val dimensions = WdsTheme.dimensions
+    val typography = WdsTheme.typography
+
+    // Track scroll state for collapsing header
+    val listState = rememberLazyListState()
+    val density = LocalDensity.current
+
+    // Calculate threshold: top padding (24dp) + avatar (120dp) + spacer (16dp) = 160dp
+    // This is where the name text starts in ProfileHeader/GroupInfoHeader
+    val namePositionDp = dimensions.wdsSpacingTriple + dimensions.wdsAvatarXXL + dimensions.wdsSpacingDouble
+    val thresholdPx = with(density) { namePositionDp.toPx() }
+
+    // Determine if header should be collapsed (when name scrolls under the header)
+    val isHeaderCollapsed by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > thresholdPx
+        }
+    }
+
     // Set status bar color based on theme
     val systemUiController = rememberSystemUiController()
-    val statusBarColor = WdsTheme.colors.colorSurfaceDefault
+    val statusBarColor = colors.colorSurfaceDefault
     DisposableEffect(isDarkTheme, statusBarColor) {
         systemUiController.setStatusBarColor(
             color = statusBarColor,
@@ -54,16 +86,83 @@ fun ChatInfoScreen(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding(),
-        containerColor = WdsTheme.colors.colorSurfaceDefault,
+        containerColor = colors.colorSurfaceDefault,
         topBar = {
             TopAppBar(
-                title = { },
+                title = {
+                    // Show avatar and name when collapsed
+                    if (isHeaderCollapsed) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Avatar - 40dp matching ChatTopBar
+                            val avatarUrl = if (uiState.isGroupChat) {
+                                uiState.conversation?.avatarUrl
+                            } else {
+                                uiState.directChatUser?.avatarUrl
+                            }
+
+                            when {
+                                avatarUrl != null && avatarUrl.startsWith("drawable://") -> {
+                                    // Handle local drawable resources for groups
+                                    val drawableResId = when (avatarUrl.removePrefix("drawable://")) {
+                                        "emoji_thinking_monocle" -> R.drawable.emoji_thinking_monocle
+                                        "emoji_microscope" -> R.drawable.emoji_microscope
+                                        else -> null
+                                    }
+
+                                    if (drawableResId != null) {
+                                        Image(
+                                            painter = painterResource(id = drawableResId),
+                                            contentDescription = "Avatar",
+                                            modifier = Modifier
+                                                .size(dimensions.wdsAvatarMedium)
+                                                .clip(CircleShape),
+                                            contentScale = ContentScale.Crop
+                                        )
+                                    } else {
+                                        AvatarPlaceholder(uiState.isGroupChat, colors, dimensions)
+                                    }
+                                }
+                                avatarUrl != null -> {
+                                    AsyncImage(
+                                        model = avatarUrl,
+                                        contentDescription = "Avatar",
+                                        modifier = Modifier
+                                            .size(dimensions.wdsAvatarMedium)
+                                            .clip(CircleShape),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
+                                else -> {
+                                    AvatarPlaceholder(uiState.isGroupChat, colors, dimensions)
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.width(dimensions.wdsSpacingSingle))
+
+                            // Name - matching ChatTopBar style
+                            Text(
+                                text = if (uiState.isGroupChat) {
+                                    uiState.conversation?.title ?: "Unknown Group"
+                                } else {
+                                    uiState.directChatUser?.displayName ?: "Unknown"
+                                },
+                                style = typography.body1Emphasized,
+                                color = colors.colorContentDefault,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = WdsTheme.colors.colorContentDefault
+                            tint = colors.colorContentDefault
                         )
                     }
                 },
@@ -72,22 +171,23 @@ fun ChatInfoScreen(
                         Icon(
                             imageVector = Icons.Filled.MoreVert,
                             contentDescription = "More options",
-                            tint = WdsTheme.colors.colorContentDefault
+                            tint = colors.colorContentDefault
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = WdsTheme.colors.colorSurfaceDefault
+                    containerColor = colors.colorSurfaceDefault
                 )
             )
         }
     ) { paddingValues ->
         if (uiState.conversation != null) {
             LazyColumn(
+                state = listState,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
-                contentPadding = PaddingValues(bottom = 16.dp)
+                contentPadding = PaddingValues(bottom = dimensions.wdsSpacingDouble)
             ) {
                 if (uiState.isGroupChat) {
                     // Group Chat Info Components
@@ -276,6 +376,33 @@ fun ChatInfoScreen(
             ) {
                 CircularProgressIndicator()
             }
+        }
+    }
+}
+
+@Composable
+private fun AvatarPlaceholder(
+    isGroupChat: Boolean,
+    colors: com.example.chatapp.wds.theme.WdsColorScheme,
+    dimensions: com.example.chatapp.wds.tokens.WdsDimensions
+) {
+    Box(
+        modifier = Modifier
+            .size(dimensions.wdsAvatarMedium)
+            .clip(CircleShape)
+            .background(
+                if (isGroupChat) colors.colorSurfaceHighlight
+                else colors.colorSurfaceElevatedDefault
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        if (isGroupChat) {
+            Icon(
+                imageVector = Icons.Default.Group,
+                contentDescription = "Group",
+                modifier = Modifier.size(dimensions.wdsIconSizeMedium),
+                tint = colors.colorContentDeemphasized
+            )
         }
     }
 }

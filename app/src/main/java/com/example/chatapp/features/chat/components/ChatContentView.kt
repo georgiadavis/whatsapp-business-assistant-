@@ -425,7 +425,7 @@ fun ChatContentView(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(
-                            end = WdsTheme.dimensions.wdsSpacingDouble,
+                            end = WdsTheme.dimensions.wdsSpacingSinglePlus,
                             bottom = WdsTheme.dimensions.wdsSpacingSinglePlus // 12dp above the composer container
                         )
                 ) {

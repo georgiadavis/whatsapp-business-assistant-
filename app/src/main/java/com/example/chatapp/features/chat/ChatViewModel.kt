@@ -7,10 +7,12 @@ import com.example.chatapp.data.local.entity.MessageEntity
 import com.example.chatapp.data.local.entity.MessageType
 import com.example.chatapp.data.repository.ChatRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
@@ -106,11 +108,22 @@ class ChatViewModel @Inject constructor(
                     if (otherUser != null) {
                         val user = chatRepository.getUserById(otherUser.userId)
                         if (user != null) {
+                            // Initially show with isOnline = false (will show last seen)
                             _uiState.update { it.copy(
                                 conversationTitle = user.displayName,
                                 conversationAvatar = user.avatarUrl,
-                                isGroupChat = false
+                                isGroupChat = false,
+                                isOnline = false,
+                                lastSeen = formatLastSeen(user.lastSeen)
                             )}
+
+                            // After 3 seconds, randomly show online status for 50% of chats
+                            if (user.isOnline && Random.nextBoolean()) {
+                                viewModelScope.launch {
+                                    delay(3000)
+                                    _uiState.update { it.copy(isOnline = true) }
+                                }
+                            }
                         }
                     }
                 }
@@ -158,6 +171,22 @@ class ChatViewModel @Inject constructor(
                 unreadCount = 0,
                 firstUnreadMessageId = null
             )}
+        }
+    }
+
+    private fun formatLastSeen(lastSeenTimestamp: Long): String {
+        val now = System.currentTimeMillis()
+        val diff = now - lastSeenTimestamp
+        val minutes = diff / (1000 * 60)
+        val hours = diff / (1000 * 60 * 60)
+        val days = diff / (1000 * 60 * 60 * 24)
+
+        return when {
+            minutes < 1 -> "last seen just now"
+            minutes < 60 -> "last seen $minutes ${if (minutes == 1L) "minute" else "minutes"} ago"
+            hours < 24 -> "last seen $hours ${if (hours == 1L) "hour" else "hours"} ago"
+            days < 7 -> "last seen $days ${if (days == 1L) "day" else "days"} ago"
+            else -> "last seen recently"
         }
     }
 }
