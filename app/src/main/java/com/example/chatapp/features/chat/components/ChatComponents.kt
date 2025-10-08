@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Add
@@ -21,6 +23,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +39,8 @@ import androidx.compose.ui.graphics.vector.Path
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -104,244 +109,331 @@ fun ChatComposer(
     val dimensions = WdsTheme.dimensions
     val shapes = WdsTheme.shapes
 
+    // Track line count for multiline detection
+    var lineCount by remember { mutableStateOf(1) }
+    val scrollState = rememberScrollState()
+    val density = LocalDensity.current
+    val typography = WdsTheme.typography
+
+    // Auto-scroll to bottom when text changes
+    LaunchedEffect(value) {
+        if (scrollState.maxValue > 0) {
+            scrollState.animateScrollTo(scrollState.maxValue)
+        }
+    }
+
+    // Determine if multiline (more than 1 line)
+    val isMultiline = lineCount > 1
+
+    // Max 6 lines
+    val maxLines = 6
+
+    // Calculate max height based on line height (convert TextUnit to Dp)
+    val lineHeightDp = remember(density, typography) {
+        with(density) {
+            val lh = typography.chatBody1.lineHeight
+            if (lh.value > 0) lh.toDp() else 21.dp
+        }
+    }
+    val maxHeight = lineHeightDp * maxLines
+    val lineHeightPx = remember(density, typography) {
+        with(density) {
+            val lh = typography.chatBody1.lineHeight
+            if (lh.value > 0) lh.toPx() else 21.dp.toPx()
+        }
+    }
+
     Surface(
         modifier = modifier
-            .navigationBarsPadding() // Add navigation bar padding
-            .imePadding(), // Add keyboard padding
-        color = Color.Transparent // Transparent background
+            .navigationBarsPadding()
+            .imePadding(),
+        color = Color.Transparent
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle, vertical = WdsTheme.dimensions.wdsSpacingSingle),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(dimensions.wdsSpacingHalf),
+            verticalAlignment = Alignment.Bottom
         ) {
             // Message input field with icons inside
             Surface(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = WdsTheme.dimensions.wdsSpacingSingle),
-                shape = shapes.triplePlus,
-                color = colors.colorBubbleSurfaceIncoming
+                    .padding(end = dimensions.wdsSpacingHalf),
+                shape = shapes.triple, // 24dp border radius
+                color = colors.colorBubbleSurfaceIncoming,
+                shadowElevation = 1.dp
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = dimensions.wdsSpacingDouble, vertical = dimensions.wdsSpacingSinglePlus),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Expression/emoji icon with custom SVG path
-                    val expressionIcon = rememberVectorPainter(
-                        ImageVector.Builder(
-                            defaultWidth = 25.dp,
-                            defaultHeight = 25.dp,
-                            viewportWidth = 25f,
-                            viewportHeight = 25f
-                        ).apply {
-                            // Left eye
-                            path(
-                                fill = SolidColor(colors.colorContentDeemphasized),
-                                pathFillType = PathFillType.NonZero
-                            ) {
-                                moveTo(8.99893f, 10.5021f)
-                                curveTo(9.82736f, 10.5021f, 10.4989f, 9.8305f, 10.4989f, 9.00208f)
-                                curveTo(10.4989f, 8.17365f, 9.82736f, 7.50208f, 8.99893f, 7.50208f)
-                                curveTo(8.1705f, 7.50208f, 7.49893f, 8.17365f, 7.49893f, 9.00208f)
-                                curveTo(7.49893f, 9.8305f, 8.1705f, 10.5021f, 8.99893f, 10.5021f)
-                                close()
+                        .then(
+                            if (isMultiline) {
+                                Modifier.padding(
+                                    start = 0.dp,
+                                    end = dimensions.wdsSpacingHalf,
+                                    top = dimensions.wdsSpacingHalf,
+                                    bottom = 0.dp
+                                )
+                            } else {
+                                Modifier.padding(
+                                    end = dimensions.wdsSpacingHalf
+                                )
                             }
-                            // Right eye
-                            path(
-                                fill = SolidColor(colors.colorContentDeemphasized),
-                                pathFillType = PathFillType.NonZero
-                            ) {
-                                moveTo(17.5011f, 9.00208f)
-                                curveTo(17.5011f, 9.8305f, 16.8295f, 10.5021f, 16.0011f, 10.5021f)
-                                curveTo(15.1726f, 10.5021f, 14.5011f, 9.8305f, 14.5011f, 9.00208f)
-                                curveTo(14.5011f, 8.17365f, 15.1726f, 7.50208f, 16.0011f, 7.50208f)
-                                curveTo(16.8295f, 7.50208f, 17.5011f, 8.17365f, 17.5011f, 9.00208f)
-                                close()
-                            }
-                            // Face outline with speech bubble
-                            path(
-                                fill = SolidColor(colors.colorContentDeemphasized),
-                                pathFillType = PathFillType.EvenOdd
-                            ) {
-                                moveTo(17.3221f, 20.2299f)
-                                curveTo(16.0379f, 21.5037f, 14.3087f, 22.2281f, 12.5f, 22.25f)
-                                horizontalLineTo(9.77273f)
-                                curveTo(5.75611f, 22.25f, 2.5f, 18.9939f, 2.5f, 14.9773f)
-                                verticalLineTo(9.52273f)
-                                curveTo(2.5f, 5.50611f, 5.75611f, 2.25f, 9.77273f, 2.25f)
-                                horizontalLineTo(15.2273f)
-                                curveTo(19.2439f, 2.25f, 22.5f, 5.50611f, 22.5f, 9.52273f)
-                                verticalLineTo(12.0641f)
-                                curveTo(22.5f, 14.0032f, 21.7256f, 15.862f, 20.3489f, 17.2276f)
-                                lineTo(17.3221f, 20.2299f)
-                                close()
-                                moveTo(15.2273f, 4.25f)
-                                horizontalLineTo(9.77273f)
-                                curveTo(6.86068f, 4.25f, 4.5f, 6.61068f, 4.5f, 9.52273f)
-                                verticalLineTo(14.9773f)
-                                curveTo(4.5f, 17.8893f, 6.86068f, 20.25f, 9.77273f, 20.25f)
-                                horizontalLineTo(11.8331f)
-                                curveTo(12.222f, 20.1471f, 12.5081f, 19.7917f, 12.5058f, 19.3704f)
-                                lineTo(12.4935f, 17.1064f)
-                                curveTo(12.4933f, 17.0701f, 12.4935f, 17.034f, 12.4941f, 16.9979f)
-                                curveTo(11.5454f, 16.9973f, 10.659f, 16.764f, 9.83502f, 16.2979f)
-                                curveTo(9.01002f, 15.8312f, 8.34752f, 15.1979f, 7.84752f, 14.3979f)
-                                curveTo(7.74752f, 14.1979f, 7.75585f, 13.9979f, 7.87252f, 13.7979f)
-                                curveTo(7.98919f, 13.5979f, 8.16419f, 13.4979f, 8.39752f, 13.4979f)
-                                lineTo(14.0939f, 13.4979f)
-                                curveTo(14.9494f, 12.731f, 16.0811f, 12.266f, 17.3216f, 12.2708f)
-                                lineTo(19.5806f, 12.2796f)
-                                curveTo(20.0817f, 12.2815f, 20.4889f, 11.8759f, 20.4889f, 11.3748f)
-                                verticalLineTo(9.32648f)
-                                horizontalLineTo(20.4964f)
-                                curveTo(20.3932f, 6.50535f, 18.0736f, 4.25f, 15.2273f, 4.25f)
-                                close()
-                                moveTo(14.5057f, 19.3595f)
-                                curveTo(14.5066f, 19.5105f, 14.4959f, 19.6589f, 14.4744f, 19.8037f)
-                                curveTo(15.0044f, 19.5624f, 15.4926f, 19.2276f, 15.9136f, 18.8099f)
-                                lineTo(18.9405f, 15.8076f)
-                                curveTo(19.3989f, 15.3529f, 19.7653f, 14.8226f, 20.0274f, 14.246f)
-                                curveTo(19.8793f, 14.2687f, 19.7275f, 14.2801f, 19.5729f, 14.2795f)
-                                lineTo(17.3138f, 14.2708f)
-                                curveTo(15.752f, 14.2647f, 14.485f, 15.5337f, 14.4935f, 17.0955f)
-                                lineTo(14.5057f, 19.3595f)
-                                close()
-                            }
-                        }.build()
-                    )
-                    
-                    Icon(
-                        painter = expressionIcon,
-                        contentDescription = "Expression",
-                        tint = colors.colorContentDeemphasized,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    
-                    // Text field
-                    BasicTextField(
-                        value = value,
-                        onValueChange = onValueChange,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = WdsTheme.dimensions.wdsSpacingSinglePlus),
-                        textStyle = WdsTheme.typography.body1.copy(
-                            color = colors.colorContentDefault
                         ),
-                        singleLine = true,
-                        cursorBrush = SolidColor(colors.colorAccent),
-                        decorationBox = { innerTextField ->
-                            Box {
-                                if (value.isEmpty()) {
-                                    Text(
-                                        "Message",
-                                        style = WdsTheme.typography.body1.copy(
-                                            color = colors.colorBubbleContentDeemphasized
-                                        )
-                                    )
-                                }
-                                innerTextField()
-                            }
-                        }
-                    )
-                    
-                    // Right side icons
-                    if (value.isEmpty()) {
-                        // Attachment icon with custom SVG path
-                        val attachmentIcon = rememberVectorPainter(
+                    verticalAlignment = if (isMultiline) Alignment.Bottom else Alignment.CenterVertically
+                ) {
+                    // Left icon container (48dp fixed width, bottom-aligned)
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .align(Alignment.Bottom),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // Expression/emoji icon with custom SVG path
+                        val expressionIcon = rememberVectorPainter(
                             ImageVector.Builder(
-                                defaultWidth = 24.dp,
-                                defaultHeight = 24.dp,
-                                viewportWidth = 24f,
-                                viewportHeight = 24f
+                                defaultWidth = 25.dp,
+                                defaultHeight = 25.dp,
+                                viewportWidth = 25f,
+                                viewportHeight = 25f
                             ).apply {
+                                // Left eye
                                 path(
                                     fill = SolidColor(colors.colorContentDeemphasized),
                                     pathFillType = PathFillType.NonZero
                                 ) {
-                                    moveTo(18f, 15.75f)
-                                    curveTo(18f, 17.4833f, 17.3917f, 18.9583f, 16.175f, 20.175f)
-                                    curveTo(14.9583f, 21.3917f, 13.4833f, 22f, 11.75f, 22f)
-                                    curveTo(10.0167f, 22f, 8.54167f, 21.3917f, 7.325f, 20.175f)
-                                    curveTo(6.10833f, 18.9583f, 5.5f, 17.4833f, 5.5f, 15.75f)
-                                    verticalLineTo(6.5f)
-                                    curveTo(5.5f, 5.25f, 5.9375f, 4.1875f, 6.8125f, 3.3125f)
-                                    curveTo(7.6875f, 2.4375f, 8.75f, 2f, 10f, 2f)
-                                    curveTo(11.25f, 2f, 12.3125f, 2.4375f, 13.1875f, 3.3125f)
-                                    curveTo(14.0625f, 4.1875f, 14.5f, 5.25f, 14.5f, 6.5f)
-                                    verticalLineTo(15.25f)
-                                    curveTo(14.5f, 16.0167f, 14.2333f, 16.6667f, 13.7f, 17.2f)
-                                    curveTo(13.1667f, 17.7333f, 12.5167f, 18f, 11.75f, 18f)
-                                    curveTo(10.9833f, 18f, 10.3333f, 17.7333f, 9.8f, 17.2f)
-                                    curveTo(9.26667f, 16.6667f, 9f, 16.0167f, 9f, 15.25f)
-                                    verticalLineTo(7f)
-                                    curveTo(9f, 6.44772f, 9.44772f, 6f, 10f, 6f)
-                                    curveTo(10.5523f, 6f, 11f, 6.44772f, 11f, 7f)
-                                    verticalLineTo(15.25f)
-                                    curveTo(11f, 15.4667f, 11.0708f, 15.6458f, 11.2125f, 15.7875f)
-                                    curveTo(11.3542f, 15.9292f, 11.5333f, 16f, 11.75f, 16f)
-                                    curveTo(11.9667f, 16f, 12.1458f, 15.9292f, 12.2875f, 15.7875f)
-                                    curveTo(12.4292f, 15.6458f, 12.5f, 15.4667f, 12.5f, 15.25f)
-                                    verticalLineTo(6.5f)
-                                    curveTo(12.4833f, 5.8f, 12.2375f, 5.20833f, 11.7625f, 4.725f)
-                                    curveTo(11.2875f, 4.24167f, 10.7f, 4f, 10f, 4f)
-                                    curveTo(9.3f, 4f, 8.70833f, 4.24167f, 8.225f, 4.725f)
-                                    curveTo(7.74167f, 5.20833f, 7.5f, 5.8f, 7.5f, 6.5f)
-                                    verticalLineTo(15.75f)
-                                    curveTo(7.48333f, 16.9333f, 7.89167f, 17.9375f, 8.725f, 18.7625f)
-                                    curveTo(9.55833f, 19.5875f, 10.5667f, 20f, 11.75f, 20f)
-                                    curveTo(12.9167f, 20f, 13.9083f, 19.5875f, 14.725f, 18.7625f)
-                                    curveTo(15.5417f, 17.9375f, 15.9667f, 16.9333f, 16f, 15.75f)
-                                    verticalLineTo(7f)
-                                    curveTo(16f, 6.44772f, 16.4477f, 6f, 17f, 6f)
-                                    curveTo(17.5523f, 6f, 18f, 6.44772f, 18f, 7f)
-                                    verticalLineTo(15.75f)
+                                    moveTo(8.99893f, 10.5021f)
+                                    curveTo(9.82736f, 10.5021f, 10.4989f, 9.8305f, 10.4989f, 9.00208f)
+                                    curveTo(10.4989f, 8.17365f, 9.82736f, 7.50208f, 8.99893f, 7.50208f)
+                                    curveTo(8.1705f, 7.50208f, 7.49893f, 8.17365f, 7.49893f, 9.00208f)
+                                    curveTo(7.49893f, 9.8305f, 8.1705f, 10.5021f, 8.99893f, 10.5021f)
+                                    close()
+                                }
+                                // Right eye
+                                path(
+                                    fill = SolidColor(colors.colorContentDeemphasized),
+                                    pathFillType = PathFillType.NonZero
+                                ) {
+                                    moveTo(17.5011f, 9.00208f)
+                                    curveTo(17.5011f, 9.8305f, 16.8295f, 10.5021f, 16.0011f, 10.5021f)
+                                    curveTo(15.1726f, 10.5021f, 14.5011f, 9.8305f, 14.5011f, 9.00208f)
+                                    curveTo(14.5011f, 8.17365f, 15.1726f, 7.50208f, 16.0011f, 7.50208f)
+                                    curveTo(16.8295f, 7.50208f, 17.5011f, 8.17365f, 17.5011f, 9.00208f)
+                                    close()
+                                }
+                                // Face outline with speech bubble
+                                path(
+                                    fill = SolidColor(colors.colorContentDeemphasized),
+                                    pathFillType = PathFillType.EvenOdd
+                                ) {
+                                    moveTo(17.3221f, 20.2299f)
+                                    curveTo(16.0379f, 21.5037f, 14.3087f, 22.2281f, 12.5f, 22.25f)
+                                    horizontalLineTo(9.77273f)
+                                    curveTo(5.75611f, 22.25f, 2.5f, 18.9939f, 2.5f, 14.9773f)
+                                    verticalLineTo(9.52273f)
+                                    curveTo(2.5f, 5.50611f, 5.75611f, 2.25f, 9.77273f, 2.25f)
+                                    horizontalLineTo(15.2273f)
+                                    curveTo(19.2439f, 2.25f, 22.5f, 5.50611f, 22.5f, 9.52273f)
+                                    verticalLineTo(12.0641f)
+                                    curveTo(22.5f, 14.0032f, 21.7256f, 15.862f, 20.3489f, 17.2276f)
+                                    lineTo(17.3221f, 20.2299f)
+                                    close()
+                                    moveTo(15.2273f, 4.25f)
+                                    horizontalLineTo(9.77273f)
+                                    curveTo(6.86068f, 4.25f, 4.5f, 6.61068f, 4.5f, 9.52273f)
+                                    verticalLineTo(14.9773f)
+                                    curveTo(4.5f, 17.8893f, 6.86068f, 20.25f, 9.77273f, 20.25f)
+                                    horizontalLineTo(11.8331f)
+                                    curveTo(12.222f, 20.1471f, 12.5081f, 19.7917f, 12.5058f, 19.3704f)
+                                    lineTo(12.4935f, 17.1064f)
+                                    curveTo(12.4933f, 17.0701f, 12.4935f, 17.034f, 12.4941f, 16.9979f)
+                                    curveTo(11.5454f, 16.9973f, 10.659f, 16.764f, 9.83502f, 16.2979f)
+                                    curveTo(9.01002f, 15.8312f, 8.34752f, 15.1979f, 7.84752f, 14.3979f)
+                                    curveTo(7.74752f, 14.1979f, 7.75585f, 13.9979f, 7.87252f, 13.7979f)
+                                    curveTo(7.98919f, 13.5979f, 8.16419f, 13.4979f, 8.39752f, 13.4979f)
+                                    lineTo(14.0939f, 13.4979f)
+                                    curveTo(14.9494f, 12.731f, 16.0811f, 12.266f, 17.3216f, 12.2708f)
+                                    lineTo(19.5806f, 12.2796f)
+                                    curveTo(20.0817f, 12.2815f, 20.4889f, 11.8759f, 20.4889f, 11.3748f)
+                                    verticalLineTo(9.32648f)
+                                    horizontalLineTo(20.4964f)
+                                    curveTo(20.3932f, 6.50535f, 18.0736f, 4.25f, 15.2273f, 4.25f)
+                                    close()
+                                    moveTo(14.5057f, 19.3595f)
+                                    curveTo(14.5066f, 19.5105f, 14.4959f, 19.6589f, 14.4744f, 19.8037f)
+                                    curveTo(15.0044f, 19.5624f, 15.4926f, 19.2276f, 15.9136f, 18.8099f)
+                                    lineTo(18.9405f, 15.8076f)
+                                    curveTo(19.3989f, 15.3529f, 19.7653f, 14.8226f, 20.0274f, 14.246f)
+                                    curveTo(19.8793f, 14.2687f, 19.7275f, 14.2801f, 19.5729f, 14.2795f)
+                                    lineTo(17.3138f, 14.2708f)
+                                    curveTo(15.752f, 14.2647f, 14.485f, 15.5337f, 14.4935f, 17.0955f)
+                                    lineTo(14.5057f, 19.3595f)
                                     close()
                                 }
                             }.build()
                         )
-                        
-                        IconButton(
-                            onClick = onAttachClick,
+
+                        Icon(
+                            painter = expressionIcon,
+                            contentDescription = "Expression",
+                            tint = colors.colorContentDeemphasized,
                             modifier = Modifier.size(24.dp)
-                        ) {
-                            Icon(
-                                painter = attachmentIcon,
-                                contentDescription = "Attach",
-                                tint = colors.colorContentDeemphasized,
-                                modifier = Modifier.size(24.dp)
+                        )
+                    }
+
+                    // Text field with scrolling support
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(max = maxHeight)
+                            .verticalScroll(scrollState)
+                            .padding(vertical = dimensions.wdsSpacingSingle)
+                    ) {
+                        BasicTextField(
+                            value = value,
+                            onValueChange = onValueChange,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .onGloballyPositioned { coordinates ->
+                                    // Calculate line count based on text field height
+                                    val textHeight = coordinates.size.height.toFloat()
+                                    val newLineCount = if (textHeight > 0 && lineHeightPx > 0) {
+                                        maxOf(1, (textHeight / lineHeightPx).toInt())
+                                    } else {
+                                        1
+                                    }
+                                    if (newLineCount != lineCount) {
+                                        lineCount = newLineCount
+                                    }
+                                },
+                            textStyle = WdsTheme.typography.chatBody1.copy(
+                                color = colors.colorContentDefault
+                            ),
+                            cursorBrush = SolidColor(colors.colorAccent),
+                            decorationBox = { innerTextField ->
+                                Box {
+                                    if (value.isEmpty()) {
+                                        Text(
+                                            "Message",
+                                            style = WdsTheme.typography.chatBody1.copy(
+                                                color = colors.colorBubbleContentDeemphasized
+                                            )
+                                        )
+                                    }
+                                    innerTextField()
+                                }
+                            }
+                        )
+                    }
+
+                    // Right side icons container - fixed size, bottom-aligned
+                    Box(
+                        modifier = Modifier
+                            .size(
+                                width = if (value.isEmpty()) 88.dp else 44.dp,
+                                height = 48.dp
                             )
-                        }
-                        
-                        Spacer(modifier = Modifier.width(dimensions.wdsSpacingSinglePlus))
-                        
-                        // Camera icon - using same icon as chat list header
-                        IconButton(
-                            onClick = onCameraClick,
-                            modifier = Modifier.size(24.dp)
+                            .align(Alignment.Bottom),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.End
                         ) {
-                            Icon(
-                                imageVector = Icons.Outlined.PhotoCamera,
-                                contentDescription = "Camera",
-                                tint = colors.colorContentDeemphasized,
-                                modifier = Modifier.size(24.dp)
+                            // Attachment icon - custom SVG path
+                            val attachmentIcon = rememberVectorPainter(
+                                ImageVector.Builder(
+                                    defaultWidth = 24.dp,
+                                    defaultHeight = 24.dp,
+                                    viewportWidth = 24f,
+                                    viewportHeight = 24f
+                                ).apply {
+                                    path(
+                                        fill = SolidColor(colors.colorContentDeemphasized),
+                                        pathFillType = PathFillType.NonZero
+                                    ) {
+                                        moveTo(18f, 15.75f)
+                                        curveTo(18f, 17.4833f, 17.3917f, 18.9583f, 16.175f, 20.175f)
+                                        curveTo(14.9583f, 21.3917f, 13.4833f, 22f, 11.75f, 22f)
+                                        curveTo(10.0167f, 22f, 8.54167f, 21.3917f, 7.325f, 20.175f)
+                                        curveTo(6.10833f, 18.9583f, 5.5f, 17.4833f, 5.5f, 15.75f)
+                                        verticalLineTo(6.5f)
+                                        curveTo(5.5f, 5.25f, 5.9375f, 4.1875f, 6.8125f, 3.3125f)
+                                        curveTo(7.6875f, 2.4375f, 8.75f, 2f, 10f, 2f)
+                                        curveTo(11.25f, 2f, 12.3125f, 2.4375f, 13.1875f, 3.3125f)
+                                        curveTo(14.0625f, 4.1875f, 14.5f, 5.25f, 14.5f, 6.5f)
+                                        verticalLineTo(15.25f)
+                                        curveTo(14.5f, 16.0167f, 14.2333f, 16.6667f, 13.7f, 17.2f)
+                                        curveTo(13.1667f, 17.7333f, 12.5167f, 18f, 11.75f, 18f)
+                                        curveTo(10.9833f, 18f, 10.3333f, 17.7333f, 9.8f, 17.2f)
+                                        curveTo(9.26667f, 16.6667f, 9f, 16.0167f, 9f, 15.25f)
+                                        verticalLineTo(7f)
+                                        curveTo(9f, 6.44772f, 9.44772f, 6f, 10f, 6f)
+                                        curveTo(10.5523f, 6f, 11f, 6.44772f, 11f, 7f)
+                                        verticalLineTo(15.25f)
+                                        curveTo(11f, 15.4667f, 11.0708f, 15.6458f, 11.2125f, 15.7875f)
+                                        curveTo(11.3542f, 15.9292f, 11.5333f, 16f, 11.75f, 16f)
+                                        curveTo(11.9667f, 16f, 12.1458f, 15.9292f, 12.2875f, 15.7875f)
+                                        curveTo(12.4292f, 15.6458f, 12.5f, 15.4667f, 12.5f, 15.25f)
+                                        verticalLineTo(6.5f)
+                                        curveTo(12.4833f, 5.8f, 12.2375f, 5.20833f, 11.7625f, 4.725f)
+                                        curveTo(11.2875f, 4.24167f, 10.7f, 4f, 10f, 4f)
+                                        curveTo(9.3f, 4f, 8.70833f, 4.24167f, 8.225f, 4.725f)
+                                        curveTo(7.74167f, 5.20833f, 7.5f, 5.8f, 7.5f, 6.5f)
+                                        verticalLineTo(15.75f)
+                                        curveTo(7.48333f, 16.9333f, 7.89167f, 17.9375f, 8.725f, 18.7625f)
+                                        curveTo(9.55833f, 19.5875f, 10.5667f, 20f, 11.75f, 20f)
+                                        curveTo(12.9167f, 20f, 13.9083f, 19.5875f, 14.725f, 18.7625f)
+                                        curveTo(15.5417f, 17.9375f, 15.9667f, 16.9333f, 16f, 15.75f)
+                                        verticalLineTo(7f)
+                                        curveTo(16f, 6.44772f, 16.4477f, 6f, 17f, 6f)
+                                        curveTo(17.5523f, 6f, 18f, 6.44772f, 18f, 7f)
+                                        verticalLineTo(15.75f)
+                                        close()
+                                    }
+                                }.build()
                             )
+
+                            IconButton(
+                                onClick = onAttachClick,
+                                modifier = Modifier.size(44.dp)
+                            ) {
+                                Icon(
+                                    painter = attachmentIcon,
+                                    contentDescription = "Attach",
+                                    tint = colors.colorContentDeemphasized,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+
+                            // Camera icon - only show when empty
+                            if (value.isEmpty()) {
+                                IconButton(
+                                    onClick = onCameraClick,
+                                    modifier = Modifier.size(44.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.PhotoCamera,
+                                        contentDescription = "Camera",
+                                        tint = colors.colorContentDeemphasized,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+                            }
                         }
                     }
                 }
             }
-            
+
             // Mic/Send button
             FloatingActionButton(
                 onClick = if (value.isNotEmpty()) onSendClick else onMicClick,
                 modifier = Modifier.size(48.dp),
-                containerColor = colors.colorAccent, // Green accent color (#1DAA61)
+                containerColor = colors.colorAccent,
                 shape = CircleShape,
                 elevation = FloatingActionButtonDefaults.elevation(
-                    defaultElevation = 0.dp
+                    defaultElevation = 1.dp
                 )
             ) {
                 if (value.isNotEmpty()) {
@@ -352,7 +444,6 @@ fun ChatComposer(
                         modifier = Modifier.size(24.dp)
                     )
                 } else {
-                    // Mic icon with arrow down
                     Icon(
                         Icons.Default.Mic,
                         contentDescription = "Voice",
