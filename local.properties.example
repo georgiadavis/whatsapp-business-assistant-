@@ -1,0 +1,12 @@
+## This file should be copied to local.properties and is ignored by git
+
+# Android SDK location
+# Uncomment and set to your local Android SDK path
+# macOS/Linux example:
+# sdk.dir=/Users/YOUR_USERNAME/Library/Android/sdk
+# Windows example:
+# sdk.dir=C\:\\Users\\YOUR_USERNAME\\AppData\\Local\\Android\\sdk
+sdk.dir=/path/to/your/android/sdk
+
+# Optional: OpenAI API key (if needed for AI features)
+# OPENAI_API_KEY=your_api_key_here

@@ -1,0 +1,902 @@
+[
+  {
+    "type": "1:1",
+    "participants": ["Alex Chen", "Sam Rodriguez"],
+    "messages": [
+      {
+        "sender": "Sam Rodriguez",
+        "timestamp": "2025-09-12T09:15:00Z",
+        "type": "text",
+        "content": "Hey Alex, you up?"
+      },
+      {
+        "sender": "Alex Chen",
+        "timestamp": "2025-09-12T09:17:30Z",
+        "type": "text",
+        "content": "Yeah, just got to the office. Everything okay?"
+      },
+      {
+        "sender": "Sam Rodriguez",
+        "timestamp": "2025-09-12T09:18:00Z",
+        "type": "text",
+        "content": "Yeah all good! Just wondering if you have the client's contact"
+      },
+      {
+        "sender": "Sam Rodriguez",
+        "timestamp": "2025-09-12T09:18:15Z",
+        "type": "text",
+        "content": "The one from yesterday's meeting"
+      },
+      {
+        "sender": "Alex Chen",
+        "timestamp": "2025-09-12T09:19:00Z",
+        "type": "text",
+        "content": "Oh, Jennifer from TechCorp?"
+      },
+      {
+        "sender": "Sam Rodriguez",
+        "timestamp": "2025-09-12T09:19:20Z",
+        "type": "text",
+        "content": "Yes! That's the one"
+      },
+      {
+        "sender": "Alex Chen",
+        "timestamp": "2025-09-12T09:20:00Z",
+        "type": "contact",
+        "content": "Jennifer Walsh - TechCorp (jennifer.walsh@techcorp.com)"
+      },
+      {
+        "sender": "Sam Rodriguez",
+        "timestamp": "2025-09-12T09:20:30Z",
+        "type": "text",
+        "content": "Perfect, thanks! 🙏"
+      },
+      {
+        "sender": "Alex Chen",
+        "timestamp": "2025-09-12T09:21:00Z",
+        "type": "text",
+        "content": "No prob! Are you following up on the proposal?"
+      },
+      {
+        "sender": "Sam Rodriguez",
+        "timestamp": "2025-09-12T09:21:45Z",
+        "type": "text",
+        "content": "Yeah, she asked for some additional specs"
+      },
+      {
+        "sender": "Sam Rodriguez",
+        "timestamp": "2025-09-12T09:22:10Z",
+        "type": "text",
+        "content": "Working on it now actually"
+      },
+      {
+        "sender": "Alex Chen",
+        "timestamp": "2025-09-12T09:22:40Z",
+        "type": "text",
+        "content": "Cool, let me know if you need the technical details"
+      },
+      {
+        "sender": "Sam Rodriguez",
+        "timestamp": "2025-09-12T09:23:00Z",
+        "type": "text",
+        "content": "Will do! Btw, team lunch tomorrow?"
+      },
+      {
+        "sender": "Alex Chen",
+        "timestamp": "2025-09-12T09:23:30Z",
+        "type": "text",
+        "content": "I'm in! Where are we thinking?"
+      },
+      {
+        "sender": "Sam Rodriguez",
+        "timestamp": "2025-09-12T09:24:00Z",
+        "type": "text",
+        "content": "Maybe that Mexican place downtown?"
+      },
+      {
+        "sender": "Alex Chen",
+        "timestamp": "2025-09-12T09:24:30Z",
+        "type": "text",
+        "content": "Sounds good to me 🌮"
+      }
+    ]
+  },
+  {
+    "type": "1:1",
+    "participants": ["Emma Thompson", "Lucas Martin"],
+    "messages": [
+      {
+        "sender": "Lucas Martin",
+        "timestamp": "2025-09-12T14:30:00Z",
+        "type": "image",
+        "content": "Photo of a funny street sign"
+      },
+      {
+        "sender": "Lucas Martin",
+        "timestamp": "2025-09-12T14:30:15Z",
+        "type": "text",
+        "content": "Look what I just found 😂"
+      },
+      {
+        "sender": "Emma Thompson",
+        "timestamp": "2025-09-12T14:32:00Z",
+        "type": "text",
+        "content": "HAHAHA no way!"
+      },
+      {
+        "sender": "Emma Thompson",
+        "timestamp": "2025-09-12T14:32:20Z",
+        "type": "text",
+        "content": "Where is this??"
+      },
+      {
+        "sender": "Lucas Martin",
+        "timestamp": "2025-09-12T14:32:45Z",
+        "type": "location",
+        "content": "Location: Downtown, near 5th Avenue"
+      },
+      {
+        "sender": "Lucas Martin",
+        "timestamp": "2025-09-12T14:33:00Z",
+        "type": "text",
+        "content": "Right by the coffee shop we went to last week"
+      },
+      {
+        "sender": "Emma Thompson",
+        "timestamp": "2025-09-12T14:33:30Z",
+        "type": "text",
+        "content": "I can't believe I missed that 😅"
+      },
+      {
+        "sender": "Lucas Martin",
+        "timestamp": "2025-09-12T14:34:00Z",
+        "type": "text",
+        "content": "Speaking of coffee, wanna grab some?"
+      },
+      {
+        "sender": "Emma Thompson",
+        "timestamp": "2025-09-12T14:34:30Z",
+        "type": "text",
+        "content": "Always! When?"
+      },
+      {
+        "sender": "Lucas Martin",
+        "timestamp": "2025-09-12T14:35:00Z",
+        "type": "text",
+        "content": "I'm free in like 30 mins"
+      },
+      {
+        "sender": "Emma Thompson",
+        "timestamp": "2025-09-12T14:35:30Z",
+        "type": "text",
+        "content": "Perfect! Same place?"
+      },
+      {
+        "sender": "Lucas Martin",
+        "timestamp": "2025-09-12T14:36:00Z",
+        "type": "text",
+        "content": "Yep! See you there"
+      },
+      {
+        "sender": "Emma Thompson",
+        "timestamp": "2025-09-12T14:36:20Z",
+        "type": "sticker",
+        "content": "Coffee cup sticker"
+      }
+    ]
+  },
+  {
+    "type": "1:1",
+    "participants": ["David Kim", "Sofia Patel"],
+    "messages": [
+      {
+        "sender": "Sofia Patel",
+        "timestamp": "2025-09-12T18:00:00Z",
+        "type": "text",
+        "content": "David!! Guess what!!"
+      },
+      {
+        "sender": "David Kim",
+        "timestamp": "2025-09-12T18:01:30Z",
+        "type": "text",
+        "content": "What?? The suspense is killing me!"
+      },
+      {
+        "sender": "Sofia Patel",
+        "timestamp": "2025-09-12T18:02:00Z",
+        "type": "text",
+        "content": "I GOT THE JOB!!! 🎉🎉🎉"
+      },
+      {
+        "sender": "David Kim",
+        "timestamp": "2025-09-12T18:02:15Z",
+        "type": "text",
+        "content": "OMG CONGRATS!!!"
+      },
+      {
+        "sender": "David Kim",
+        "timestamp": "2025-09-12T18:02:30Z",
+        "type": "voice",
+        "content": "Voice note: 'This is amazing! I'm so proud of you!'"
+      },
+      {
+        "sender": "Sofia Patel",
+        "timestamp": "2025-09-12T18:03:00Z",
+        "type": "text",
+        "content": "Thank youuu! I'm still shaking!"
+      },
+      {
+        "sender": "David Kim",
+        "timestamp": "2025-09-12T18:03:30Z",
+        "type": "text",
+        "content": "When do you start?"
+      },
+      {
+        "sender": "Sofia Patel",
+        "timestamp": "2025-09-12T18:04:00Z",
+        "type": "text",
+        "content": "In two weeks! Need to put in my notice tomorrow"
+      },
+      {
+        "sender": "David Kim",
+        "timestamp": "2025-09-12T18:04:30Z",
+        "type": "text",
+        "content": "This calls for a celebration! 🍾"
+      },
+      {
+        "sender": "Sofia Patel",
+        "timestamp": "2025-09-12T18:05:00Z",
+        "type": "text",
+        "content": "Yes!! Friday night?"
+      },
+      {
+        "sender": "David Kim",
+        "timestamp": "2025-09-12T18:05:30Z",
+        "type": "text",
+        "content": "It's a date! I'll get the gang together"
+      },
+      {
+        "sender": "Sofia Patel",
+        "timestamp": "2025-09-12T18:06:00Z",
+        "type": "text",
+        "content": "You're the best! ❤️"
+      }
+    ]
+  },
+  {
+    "type": "1:1",
+    "participants": ["Marcus Johnson", "Priya Singh"],
+    "messages": [
+      {
+        "sender": "Marcus Johnson",
+        "timestamp": "2025-09-12T11:00:00Z",
+        "type": "text",
+        "content": "Hey, are you watching the game tonight?"
+      },
+      {
+        "sender": "Priya Singh",
+        "timestamp": "2025-09-12T11:05:00Z",
+        "type": "text",
+        "content": "Which game?"
+      },
+      {
+        "sender": "Marcus Johnson",
+        "timestamp": "2025-09-12T11:05:30Z",
+        "type": "text",
+        "content": "Lakers vs Warriors!"
+      },
+      {
+        "sender": "Priya Singh",
+        "timestamp": "2025-09-12T11:06:00Z",
+        "type": "text",
+        "content": "Oh right! Totally forgot"
+      },
+      {
+        "sender": "Priya Singh",
+        "timestamp": "2025-09-12T11:06:15Z",
+        "type": "text",
+        "content": "What time does it start?"
+      },
+      {
+        "sender": "Marcus Johnson",
+        "timestamp": "2025-09-12T11:06:45Z",
+        "type": "text",
+        "content": "7:30 PM"
+      },
+      {
+        "sender": "Marcus Johnson",
+        "timestamp": "2025-09-12T11:07:00Z",
+        "type": "text",
+        "content": "Wanna come over and watch?"
+      },
+      {
+        "sender": "Priya Singh",
+        "timestamp": "2025-09-12T11:07:30Z",
+        "type": "text",
+        "content": "Sure! I'll bring pizza 🍕"
+      },
+      {
+        "sender": "Marcus Johnson",
+        "timestamp": "2025-09-12T11:08:00Z",
+        "type": "text",
+        "content": "Perfect! I've got drinks covered"
+      },
+      {
+        "sender": "Priya Singh",
+        "timestamp": "2025-09-12T11:08:30Z",
+        "type": "text",
+        "content": "Cool. Mike coming too?"
+      },
+      {
+        "sender": "Marcus Johnson",
+        "timestamp": "2025-09-12T11:09:00Z",
+        "type": "text",
+        "content": "Haven't asked him yet"
+      },
+      {
+        "sender": "Marcus Johnson",
+        "timestamp": "2025-09-12T11:09:15Z",
+        "type": "text",
+        "content": "I'll text him now"
+      },
+      {
+        "sender": "Priya Singh",
+        "timestamp": "2025-09-12T11:09:45Z",
+        "type": "text",
+        "content": "Tell him to bring those nachos he made last time!"
+      },
+      {
+        "sender": "Marcus Johnson",
+        "timestamp": "2025-09-12T11:10:00Z",
+        "type": "text",
+        "content": "Haha will do!"
+      }
+    ]
+  },
+  {
+    "type": "1:1",
+    "participants": ["Rachel Green", "Tom Anderson"],
+    "messages": [
+      {
+        "sender": "Rachel Green",
+        "timestamp": "2025-09-12T16:45:00Z",
+        "type": "text",
+        "content": "Tom, quick question"
+      },
+      {
+        "sender": "Tom Anderson",
+        "timestamp": "2025-09-12T16:46:00Z",
+        "type": "text",
+        "content": "Shoot"
+      },
+      {
+        "sender": "Rachel Green",
+        "timestamp": "2025-09-12T16:46:30Z",
+        "type": "text",
+        "content": "Do you remember the wifi password for the conference room?"
+      },
+      {
+        "sender": "Tom Anderson",
+        "timestamp": "2025-09-12T16:47:00Z",
+        "type": "text",
+        "content": "Uhh let me check"
+      },
+      {
+        "sender": "Tom Anderson",
+        "timestamp": "2025-09-12T16:47:30Z",
+        "type": "text",
+        "content": "I think it's Meeting2024!"
+      },
+      {
+        "sender": "Tom Anderson",
+        "timestamp": "2025-09-12T16:47:45Z",
+        "type": "text",
+        "content": "With capital M"
+      },
+      {
+        "sender": "Rachel Green",
+        "timestamp": "2025-09-12T16:48:15Z",
+        "type": "text",
+        "content": "Hmm not working"
+      },
+      {
+        "sender": "Tom Anderson",
+        "timestamp": "2025-09-12T16:48:45Z",
+        "type": "text",
+        "content": "Wait sorry, it's Conference2024!"
+      },
+      {
+        "sender": "Rachel Green",
+        "timestamp": "2025-09-12T16:49:15Z",
+        "type": "text",
+        "content": "That worked! Thanks!"
+      },
+      {
+        "sender": "Tom Anderson",
+        "timestamp": "2025-09-12T16:49:45Z",
+        "type": "text",
+        "content": "No problem! Big presentation?"
+      },
+      {
+        "sender": "Rachel Green",
+        "timestamp": "2025-09-12T16:50:15Z",
+        "type": "text",
+        "content": "Yeah, the quarterly review 😬"
+      },
+      {
+        "sender": "Tom Anderson",
+        "timestamp": "2025-09-12T16:50:45Z",
+        "type": "text",
+        "content": "You'll crush it! 💪"
+      },
+      {
+        "sender": "Rachel Green",
+        "timestamp": "2025-09-12T16:51:00Z",
+        "type": "text",
+        "content": "Hope so! Talk later"
+      }
+    ]
+  },
+  {
+    "type": "1:1",
+    "participants": ["Nina Williams", "Jake Cooper"],
+    "messages": [
+      {
+        "sender": "Jake Cooper",
+        "timestamp": "2025-09-12T20:00:00Z",
+        "type": "text",
+        "content": "Nina! You around?"
+      },
+      {
+        "sender": "Nina Williams",
+        "timestamp": "2025-09-12T20:02:00Z",
+        "type": "text",
+        "content": "Hey! Yeah what's up?"
+      },
+      {
+        "sender": "Jake Cooper",
+        "timestamp": "2025-09-12T20:02:30Z",
+        "type": "text",
+        "content": "My car won't start 😫"
+      },
+      {
+        "sender": "Nina Williams",
+        "timestamp": "2025-09-12T20:02:45Z",
+        "type": "text",
+        "content": "Oh no! Where are you?"
+      },
+      {
+        "sender": "Jake Cooper",
+        "timestamp": "2025-09-12T20:03:15Z",
+        "type": "location",
+        "content": "Location: Parking lot at Main Street Mall"
+      },
+      {
+        "sender": "Nina Williams",
+        "timestamp": "2025-09-12T20:03:45Z",
+        "type": "text",
+        "content": "I can come jump it! Be there in 15"
+      },
+      {
+        "sender": "Jake Cooper",
+        "timestamp": "2025-09-12T20:04:00Z",
+        "type": "text",
+        "content": "You're a lifesaver!! 🙏🙏"
+      },
+      {
+        "sender": "Nina Williams",
+        "timestamp": "2025-09-12T20:04:30Z",
+        "type": "text",
+        "content": "No worries! Do you have jumper cables?"
+      },
+      {
+        "sender": "Jake Cooper",
+        "timestamp": "2025-09-12T20:05:00Z",
+        "type": "text",
+        "content": "Umm... no 😅"
+      },
+      {
+        "sender": "Nina Williams",
+        "timestamp": "2025-09-12T20:05:15Z",
+        "type": "text",
+        "content": "Lol of course. I have some"
+      },
+      {
+        "sender": "Jake Cooper",
+        "timestamp": "2025-09-12T20:05:45Z",
+        "type": "text",
+        "content": "Seriously, thank you so much"
+      },
+      {
+        "sender": "Nina Williams",
+        "timestamp": "2025-09-12T20:06:00Z",
+        "type": "text",
+        "content": "That's what friends are for! On my way"
+      },
+      {
+        "sender": "Jake Cooper",
+        "timestamp": "2025-09-12T20:06:30Z",
+        "type": "text",
+        "content": "I owe you dinner!"
+      },
+      {
+        "sender": "Nina Williams",
+        "timestamp": "2025-09-12T20:07:00Z",
+        "type": "text",
+        "content": "I'll take you up on that! 😄"
+      }
+    ]
+  },
+  {
+    "type": "1:1",
+    "participants": ["Oliver Chen", "Zara Ahmed"],
+    "messages": [
+      {
+        "sender": "Zara Ahmed",
+        "timestamp": "2025-09-12T10:30:00Z",
+        "type": "text",
+        "content": "Morning! Did you see my email?"
+      },
+      {
+        "sender": "Oliver Chen",
+        "timestamp": "2025-09-12T10:32:00Z",
+        "type": "text",
+        "content": "Just checking now... the one about the budget?"
+      },
+      {
+        "sender": "Zara Ahmed",
+        "timestamp": "2025-09-12T10:32:30Z",
+        "type": "text",
+        "content": "Yeah, need your approval before noon"
+      },
+      {
+        "sender": "Oliver Chen",
+        "timestamp": "2025-09-12T10:33:00Z",
+        "type": "text",
+        "content": "Looking at it now"
+      },
+      {
+        "sender": "Oliver Chen",
+        "timestamp": "2025-09-12T10:35:00Z",
+        "type": "text",
+        "content": "The marketing spend seems high?"
+      },
+      {
+        "sender": "Zara Ahmed",
+        "timestamp": "2025-09-12T10:35:30Z",
+        "type": "text",
+        "content": "We discussed increasing it for Q4, remember?"
+      },
+      {
+        "sender": "Oliver Chen",
+        "timestamp": "2025-09-12T10:36:00Z",
+        "type": "text",
+        "content": "Oh right, the holiday campaign"
+      },
+      {
+        "sender": "Oliver Chen",
+        "timestamp": "2025-09-12T10:36:15Z",
+        "type": "text",
+        "content": "My bad, forgot about that"
+      },
+      {
+        "sender": "Zara Ahmed",
+        "timestamp": "2025-09-12T10:36:45Z",
+        "type": "file",
+        "content": "Q4_Campaign_Strategy.pdf"
+      },
+      {
+        "sender": "Zara Ahmed",
+        "timestamp": "2025-09-12T10:37:00Z",
+        "type": "text",
+        "content": "Here's the strategy doc for reference"
+      },
+      {
+        "sender": "Oliver Chen",
+        "timestamp": "2025-09-12T10:37:30Z",
+        "type": "text",
+        "content": "Thanks! Approving now"
+      },
+      {
+        "sender": "Zara Ahmed",
+        "timestamp": "2025-09-12T10:38:00Z",
+        "type": "text",
+        "content": "Great! Also, team meeting at 2?"
+      },
+      {
+        "sender": "Oliver Chen",
+        "timestamp": "2025-09-12T10:38:30Z",
+        "type": "text",
+        "content": "Can we do 2:30? I have a conflict"
+      },
+      {
+        "sender": "Zara Ahmed",
+        "timestamp": "2025-09-12T10:39:00Z",
+        "type": "text",
+        "content": "Sure, I'll update the invite"
+      },
+      {
+        "sender": "Oliver Chen",
+        "timestamp": "2025-09-12T10:39:30Z",
+        "type": "emoji",
+        "content": "👍"
+      }
+    ]
+  },
+  {
+    "type": "1:1",
+    "participants": ["Lisa Park", "Ryan Mitchell"],
+    "messages": [
+      {
+        "sender": "Ryan Mitchell",
+        "timestamp": "2025-09-12T13:00:00Z",
+        "type": "text",
+        "content": "Lisa!! Emergency!"
+      },
+      {
+        "sender": "Lisa Park",
+        "timestamp": "2025-09-12T13:00:30Z",
+        "type": "text",
+        "content": "What happened??"
+      },
+      {
+        "sender": "Ryan Mitchell",
+        "timestamp": "2025-09-12T13:01:00Z",
+        "type": "text",
+        "content": "I forgot it's Sarah's birthday today 😱"
+      },
+      {
+        "sender": "Lisa Park",
+        "timestamp": "2025-09-12T13:01:15Z",
+        "type": "text",
+        "content": "Ryan!! How could you forget!"
+      },
+      {
+        "sender": "Ryan Mitchell",
+        "timestamp": "2025-09-12T13:01:45Z",
+        "type": "text",
+        "content": "I know I know! Help me!"
+      },
+      {
+        "sender": "Lisa Park",
+        "timestamp": "2025-09-12T13:02:15Z",
+        "type": "text",
+        "content": "Okay okay, don't panic"
+      },
+      {
+        "sender": "Lisa Park",
+        "timestamp": "2025-09-12T13:02:30Z",
+        "type": "text",
+        "content": "There's a flower shop on 3rd street"
+      },
+      {
+        "sender": "Lisa Park",
+        "timestamp": "2025-09-12T13:02:45Z",
+        "type": "text",
+        "content": "Get roses and those chocolates she likes"
+      },
+      {
+        "sender": "Ryan Mitchell",
+        "timestamp": "2025-09-12T13:03:15Z",
+        "type": "text",
+        "content": "The Belgian ones?"
+      },
+      {
+        "sender": "Lisa Park",
+        "timestamp": "2025-09-12T13:03:30Z",
+        "type": "text",
+        "content": "Yes! From that fancy place downtown"
+      },
+      {
+        "sender": "Ryan Mitchell",
+        "timestamp": "2025-09-12T13:04:00Z",
+        "type": "text",
+        "content": "You're saving my life right now"
+      },
+      {
+        "sender": "Lisa Park",
+        "timestamp": "2025-09-12T13:04:30Z",
+        "type": "text",
+        "content": "Also make a dinner reservation!"
+      },
+      {
+        "sender": "Lisa Park",
+        "timestamp": "2025-09-12T13:04:45Z",
+        "type": "text",
+        "content": "Try that Italian place she mentioned"
+      },
+      {
+        "sender": "Ryan Mitchell",
+        "timestamp": "2025-09-12T13:05:15Z",
+        "type": "text",
+        "content": "On it! Thank you!!! 🙏🙏🙏"
+      },
+      {
+        "sender": "Lisa Park",
+        "timestamp": "2025-09-12T13:05:45Z",
+        "type": "text",
+        "content": "Set a reminder for next year! 📅"
+      },
+      {
+        "sender": "Ryan Mitchell",
+        "timestamp": "2025-09-12T13:06:00Z",
+        "type": "text",
+        "content": "Already done! 😅"
+      }
+    ]
+  },
+  {
+    "type": "1:1",
+    "participants": ["Chris Walker", "Maya Gonzalez"],
+    "messages": [
+      {
+        "sender": "Maya Gonzalez",
+        "timestamp": "2025-09-12T07:30:00Z",
+        "type": "text",
+        "content": "Chris, you awake?"
+      },
+      {
+        "sender": "Chris Walker",
+        "timestamp": "2025-09-12T07:32:00Z",
+        "type": "text",
+        "content": "Barely... what's up?"
+      },
+      {
+        "sender": "Maya Gonzalez",
+        "timestamp": "2025-09-12T07:32:30Z",
+        "type": "text",
+        "content": "Can you cover my shift today? 🙏"
+      },
+      {
+        "sender": "Chris Walker",
+        "timestamp": "2025-09-12T07:33:00Z",
+        "type": "text",
+        "content": "What time?"
+      },
+      {
+        "sender": "Maya Gonzalez",
+        "timestamp": "2025-09-12T07:33:30Z",
+        "type": "text",
+        "content": "3-11 PM"
+      },
+      {
+        "sender": "Chris Walker",
+        "timestamp": "2025-09-12T07:34:00Z",
+        "type": "text",
+        "content": "That's a long one... everything okay?"
+      },
+      {
+        "sender": "Maya Gonzalez",
+        "timestamp": "2025-09-12T07:34:30Z",
+        "type": "text",
+        "content": "Family emergency, need to drive to my parents"
+      },
+      {
+        "sender": "Chris Walker",
+        "timestamp": "2025-09-12T07:35:00Z",
+        "type": "text",
+        "content": "Oh no! Of course I'll cover"
+      },
+      {
+        "sender": "Maya Gonzalez",
+        "timestamp": "2025-09-12T07:35:30Z",
+        "type": "text",
+        "content": "You're the best!! I owe you big time"
+      },
+      {
+        "sender": "Chris Walker",
+        "timestamp": "2025-09-12T07:36:00Z",
+        "type": "text",
+        "content": "Don't worry about it. Drive safe!"
+      },
+      {
+        "sender": "Maya Gonzalez",
+        "timestamp": "2025-09-12T07:36:30Z",
+        "type": "text",
+        "content": "Will do. I'll let the manager know"
+      },
+      {
+        "sender": "Chris Walker",
+        "timestamp": "2025-09-12T07:37:00Z",
+        "type": "text",
+        "content": "Already texted him 👍"
+      },
+      {
+        "sender": "Maya Gonzalez",
+        "timestamp": "2025-09-12T07:37:30Z",
+        "type": "text",
+        "content": "Seriously, thank you so much ❤️"
+      }
+    ]
+  },
+  {
+    "type": "1:1",
+    "participants": ["Daniel Brown", "Jessica Liu"],
+    "messages": [
+      {
+        "sender": "Jessica Liu",
+        "timestamp": "2025-09-12T15:00:00Z",
+        "type": "text",
+        "content": "Hey Dan! How's the new apartment?"
+      },
+      {
+        "sender": "Daniel Brown",
+        "timestamp": "2025-09-12T15:02:00Z",
+        "type": "text",
+        "content": "It's great! Still unpacking though 📦"
+      },
+      {
+        "sender": "Jessica Liu",
+        "timestamp": "2025-09-12T15:02:30Z",
+        "type": "text",
+        "content": "Need help? I'm free this weekend"
+      },
+      {
+        "sender": "Daniel Brown",
+        "timestamp": "2025-09-12T15:03:00Z",
+        "type": "text",
+        "content": "That would be amazing! Saturday?"
+      },
+      {
+        "sender": "Jessica Liu",
+        "timestamp": "2025-09-12T15:03:30Z",
+        "type": "text",
+        "content": "Works for me! What time?"
+      },
+      {
+        "sender": "Daniel Brown",
+        "timestamp": "2025-09-12T15:04:00Z",
+        "type": "text",
+        "content": "10 AM? I'll provide coffee and donuts"
+      },
+      {
+        "sender": "Jessica Liu",
+        "timestamp": "2025-09-12T15:04:30Z",
+        "type": "text",
+        "content": "Deal! Send me the address"
+      },
+      {
+        "sender": "Daniel Brown",
+        "timestamp": "2025-09-12T15:05:00Z",
+        "type": "location",
+        "content": "Location: 456 Oak Street, Apt 3B"
+      },
+      {
+        "sender": "Daniel Brown",
+        "timestamp": "2025-09-12T15:05:15Z",
+        "type": "text",
+        "content": "It's the building with the blue door"
+      },
+      {
+        "sender": "Jessica Liu",
+        "timestamp": "2025-09-12T15:05:45Z",
+        "type": "text",
+        "content": "Got it! Want me to bring anything?"
+      },
+      {
+        "sender": "Daniel Brown",
+        "timestamp": "2025-09-12T15:06:15Z",
+        "type": "text",
+        "content": "Maybe some of those organizer boxes?"
+      },
+      {
+        "sender": "Jessica Liu",
+        "timestamp": "2025-09-12T15:06:45Z",
+        "type": "text",
+        "content": "I have a bunch! See you Saturday"
+      },
+      {
+        "sender": "Daniel Brown",
+        "timestamp": "2025-09-12T15:07:00Z",
+        "type": "text",
+        "content": "Thanks Jess! You're awesome"
+      },
+      {
+        "sender": "Jessica Liu",
+        "timestamp": "2025-09-12T15:07:30Z",
+        "type": "sticker",
+        "content": "Flexing muscle sticker"
+      }
+    ]
+  }
+]
