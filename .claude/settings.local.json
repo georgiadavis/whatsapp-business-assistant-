@@ -41,7 +41,9 @@
       "Bash(do sed -i '' 's/package com\\.example\\.chatapp\\.presentation\\.chatlist/package com.example.chatapp.features.chatlist/' \"$file\")",
       "Bash(do sed -i '' 's/package com\\.example\\.chatapp\\.presentation\\.chatinfo/package com.example.chatapp.features.chatinfo/' \"$file\")",
       "Bash(do sed -i '' 's/package com\\.example\\.chatapp\\.presentation\\.chatinfo\\.components/package com.example.chatapp.features.chatinfo.components/' \"$file\")",
-      "Bash(do sed -i '' 's|import com\\.example\\.chatapp\\.wds\\.tokens\\.WdsTheme|import com.example.chatapp.wds.theme.WdsTheme|g' \"$file\")"
+      "Bash(do sed -i '' 's|import com\\.example\\.chatapp\\.wds\\.tokens\\.WdsTheme|import com.example.chatapp.wds.theme.WdsTheme|g' \"$file\")",
+      "Bash(~/Library/Android/sdk/platform-tools/adb devices)",
+      "Bash(~/Library/Android/sdk/platform-tools/adb shell am start -n com.example.chatapp/.MainActivity)"
     ],
     "deny": [],
     "ask": []

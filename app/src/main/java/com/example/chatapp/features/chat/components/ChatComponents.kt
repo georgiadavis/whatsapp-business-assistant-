@@ -127,7 +127,7 @@ fun ChatComposer(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = dimensions.wdsSpacingDouble, vertical = dimensions.wdsSpacingDouble),
+                        .padding(horizontal = dimensions.wdsSpacingDouble, vertical = dimensions.wdsSpacingSinglePlus),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // Expression/emoji icon with custom SVG path
@@ -348,7 +348,7 @@ fun ChatComposer(
                     Icon(
                         Icons.AutoMirrored.Default.Send,
                         contentDescription = "Send",
-                        tint = colors.colorAlwaysWhite,
+                        tint = colors.colorContentOnAccent,
                         modifier = Modifier.size(24.dp)
                     )
                 } else {
@@ -356,7 +356,7 @@ fun ChatComposer(
                     Icon(
                         Icons.Default.Mic,
                         contentDescription = "Voice",
-                        tint = colors.colorAlwaysWhite,
+                        tint = colors.colorContentOnAccent,
                         modifier = Modifier.size(24.dp)
                     )
                 }

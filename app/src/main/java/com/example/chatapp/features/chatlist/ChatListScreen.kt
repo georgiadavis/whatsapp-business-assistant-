@@ -590,7 +590,7 @@ private fun ArchivedRow(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = Icons.Rounded.Archive,
+                imageVector = Icons.Outlined.Archive,
                 contentDescription = "Archived",
                 tint = WdsTheme.colors.colorContentDeemphasized,
                 modifier = Modifier.size(24.dp)
