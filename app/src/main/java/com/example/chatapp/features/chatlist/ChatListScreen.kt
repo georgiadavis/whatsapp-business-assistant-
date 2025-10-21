@@ -90,10 +90,10 @@ fun ChatListScreen(
     var searchActive by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
     var selectedSearchFilter by remember { mutableStateOf<String?>(null) }
-    
+
     // Menu state
     var showMenu by remember { mutableStateOf(false) }
-    
+
     // Log state changes
     LaunchedEffect(uiState.conversations) {
         println("ChatListScreen: UI State updated. Total conversations: ${uiState.conversations.size}")
@@ -103,7 +103,7 @@ fun ChatListScreen(
             }
         }
     }
-    
+
     // Filter conversations based on search query
     val filteredConversations = remember(searchQuery, uiState.conversations) {
         if (searchQuery.isEmpty()) {
@@ -115,7 +115,7 @@ fun ChatListScreen(
             }
         }
     }
-    
+
     // Simplified scaffold without insights/variants
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -132,7 +132,7 @@ fun ChatListScreen(
                         onInsightsClick = {},
                         onLogoClick = {}
                     )
-                    
+
                     // Context menu - aligned to top-end to position below the 3-dot button
                     Box(
                         modifier = Modifier
@@ -160,7 +160,8 @@ fun ChatListScreen(
                 unreadChats = uiState.conversations.count { it.unreadCount > 0 },
                 hasUpdates = false,
                 callsBadgeCount = 0,
-                onChatsClick = { /* Already on chats */ }
+                onChatsClick = { /* Already on chats */ },
+                onAssistantClick = onDesignLibraryClick
             )
         },
         floatingActionButton = {
@@ -250,11 +251,11 @@ private fun ChatListMainContent(
             item {
                 // Get keyboard controller
                 val keyboardController = LocalSoftwareKeyboardController.current
-                
+
                 // Instant padding switch based on search active state
                 val horizontalPadding = if (searchActive) 0.dp else WdsTheme.dimensions.wdsSpacingDouble
                 val verticalPadding = if (searchActive) 0.dp else WdsTheme.dimensions.wdsSpacingHalf
-                
+
                 DockedSearchBar(
                     query = searchQuery,
                     onQueryChange = onSearchQueryChange,
@@ -326,7 +327,7 @@ private fun ChatListMainContent(
                                 selectedFilter = selectedSearchFilter,
                                 onFilterSelected = onSearchFilterSelected
                             )
-                            
+
                             // Divider line with padding
                             Box(
                                 modifier = Modifier
@@ -339,7 +340,7 @@ private fun ChatListMainContent(
                                 )
                             }
                         }
-                        
+
                         // Search results only when typing
                         Box(
                             modifier = Modifier.fillMaxSize()
@@ -393,7 +394,7 @@ private fun ChatListMainContent(
                     }
                 }
             }
-            
+
             // Filter Chips - Instant switch between inbox and search filters
             item {
                 if (!searchActive) {
@@ -407,7 +408,7 @@ private fun ChatListMainContent(
                     )
                 }
             }
-            
+
             // Archived Row - Only show when "All" filter is selected and not searching
             if (!searchActive && uiState.archivedCount > 0 && uiState.selectedFilter == ChatFilter.ALL) {
                 item {
@@ -417,7 +418,7 @@ private fun ChatListMainContent(
                     )
                 }
             }
-            
+
             // Chat Items
             // Hide main conversation list when search is active
             if (!searchActive) {
@@ -432,14 +433,14 @@ private fun ChatListMainContent(
                         println("ChatListScreen: Rendering ${conversation.id} - unreadCount=${conversation.unreadCount}, hasUnread=${conversation.hasUnread}")
                     }
                 }
-                
+
                 // Also log in the composable itself to ensure we see recomposition
                 if (conversation.id in listOf("conv_3", "conv_5", "conv_8")) {
                     SideEffect {
                         println("ChatListScreen: Composing item ${conversation.id} - unreadCount=${conversation.unreadCount}, hasUnread=${conversation.hasUnread}")
                     }
                 }
-                
+
                 WDSChatListItem(
                     title = conversation.title,
                     subtitle = conversation.subtitle,
@@ -460,7 +461,7 @@ private fun ChatListMainContent(
                 )
                 }
             }
-            
+
             // End-to-end encryption notice - only show when not searching
             if (!searchActive) {
                 item {
@@ -620,14 +621,14 @@ private fun ArchivedRow(
                 modifier = Modifier.size(WdsTheme.dimensions.wdsIconSizeMedium)
             )
         }
-        
+
         Text(
             text = "Archived",
             style = WdsTheme.typography.body1Emphasized,
             color = WdsTheme.colors.colorContentDeemphasized,
             modifier = Modifier.weight(1f)
         )
-        
+
         if (count > 0) {
             Text(
                 text = count.toString(),
@@ -644,7 +645,8 @@ private fun ChatListBottomBar(
     unreadChats: Int,
     hasUpdates: Boolean,
     callsBadgeCount: Int,
-    onChatsClick: () -> Unit = {}
+    onChatsClick: () -> Unit = {},
+    onAssistantClick: () -> Unit = {}
 ) {
     Column {
         WDSDivider()
@@ -692,7 +694,7 @@ private fun ChatListBottomBar(
                 )
             }
         )
-        
+
         NavigationBarItem(
             selected = selectedTab == 1,
             onClick = { },
@@ -733,7 +735,7 @@ private fun ChatListBottomBar(
                 )
             }
         )
-          
+
         NavigationBarItem(
             selected = selectedTab == 2,
             onClick = { },
@@ -768,10 +770,10 @@ private fun ChatListBottomBar(
                 )
             }
         )
-          
+
         NavigationBarItem(
             selected = selectedTab == 3,
-            onClick = { },
+            onClick = onAssistantClick,
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = WdsTheme.colors.colorAccentEmphasized,
                 selectedTextColor = WdsTheme.colors.colorContentDefault,
@@ -781,13 +783,13 @@ private fun ChatListBottomBar(
             ),
             icon = {
                 Icon(
-                    imageVector = Icons.Outlined.Storefront,
-                    contentDescription = "Tools"
+                    imageVector = Icons.Outlined.AutoAwesome,
+                    contentDescription = "Assistant"
                 )
             },
             label = {
                 Text(
-                    text = "Tools",
+                    text = "Assistant",
                     style = if (selectedTab == 3) WdsTheme.typography.body3InlineLink else WdsTheme.typography.body3Emphasized
                 )
             }
@@ -802,7 +804,7 @@ private fun SearchFilterPills(
     onFilterSelected: (String) -> Unit
 ) {
     val filters = listOf("Photos", "Videos", "Links", "GIFs", "Audio", "Documents")
-    
+
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()

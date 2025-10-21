@@ -34,6 +34,7 @@ import com.example.chatapp.ui.screens.ColorsScreen
 import com.example.chatapp.ui.screens.TypeScreen
 import com.example.chatapp.ui.screens.ComponentsScreen
 import com.example.chatapp.ui.screens.IconsScreen
+import com.example.chatapp.features.assistant.AssistantScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import com.example.chatapp.wds.theme.WdsTheme
@@ -92,11 +93,11 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate("chat/$conversationId")
                             },
                             onDesignLibraryClick = {
-                                navController.navigate(Screen.DesignSystemLibrary.route)
+                                navController.navigate(Screen.Assistant.route)
                             }
                         )
                     }
-                    
+
                     composable(
                         route = "chat/{conversationId}",
                         arguments = listOf(
@@ -212,7 +213,7 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
-                    
+
                     // Design System Library Routes
                     composable(
                         route = Screen.DesignSystemLibrary.route,
@@ -279,7 +280,7 @@ class MainActivity : ComponentActivity() {
                             onNavigateToIcons = { navController.navigate(Screen.Icons.route) }
                         )
                     }
-                    
+
                     composable(
                         route = Screen.Colors.route,
                         enterTransition = {
@@ -314,7 +315,7 @@ class MainActivity : ComponentActivity() {
                             onNavigateBack = { navController.popBackStack() }
                         )
                     }
-                    
+
                     composable(
                         route = Screen.Type.route,
                         enterTransition = {
@@ -349,7 +350,7 @@ class MainActivity : ComponentActivity() {
                             onNavigateBack = { navController.popBackStack() }
                         )
                     }
-                    
+
                     composable(
                         route = Screen.Components.route,
                         enterTransition = {
@@ -384,7 +385,7 @@ class MainActivity : ComponentActivity() {
                             onNavigateBack = { navController.popBackStack() }
                         )
                     }
-                    
+
                     composable(
                         route = Screen.Icons.route,
                         enterTransition = {
@@ -419,6 +420,41 @@ class MainActivity : ComponentActivity() {
                             onNavigateBack = { navController.popBackStack() }
                         )
                     }
+
+                    composable(
+                        route = Screen.Assistant.route,
+                        enterTransition = {
+                            slideInHorizontally(
+                                initialOffsetX = { it },
+                                animationSpec = tween(
+                                    durationMillis = 300,
+                                    easing = FastOutSlowInEasing
+                                )
+                            ) + fadeIn(
+                                animationSpec = tween(
+                                    durationMillis = 150,
+                                    delayMillis = 150
+                                )
+                            )
+                        },
+                        popExitTransition = {
+                            slideOutHorizontally(
+                                targetOffsetX = { it },
+                                animationSpec = tween(
+                                    durationMillis = 300,
+                                    easing = FastOutSlowInEasing
+                                )
+                            ) + fadeOut(
+                                animationSpec = tween(
+                                    durationMillis = 150
+                                )
+                            )
+                        }
+                    ) {
+                        AssistantScreen(
+                            onNavigateBack = { navController.popBackStack() }
+                        )
+                    }
                     }
                 }
             }
@@ -435,7 +471,7 @@ fun ChatDatabaseTestScreen(
     val isDatabaseInitialized by viewModel.isDatabaseInitialized.collectAsState()
     val conversations by viewModel.conversations.collectAsState(initial = emptyList())
     val users by viewModel.users.collectAsState(initial = emptyList())
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -474,7 +510,7 @@ fun ChatDatabaseTestScreen(
                                 conversationCount = conversations.size
                             )
                         }
-                        
+
                         item {
                             Text(
                                 text = "Recent Conversations",
@@ -483,7 +519,7 @@ fun ChatDatabaseTestScreen(
                                 modifier = Modifier.padding(vertical = WdsTheme.dimensions.wdsSpacingSingle)
                             )
                         }
-                        
+
                         items(conversations.take(10)) { conversation ->
                             ConversationCard(conversation)
                         }
@@ -579,7 +615,7 @@ fun ConversationCard(conversation: ConversationEntity) {
                     }
                 }
             }
-            
+
             conversation.lastMessageText?.let { lastMessage ->
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
@@ -588,7 +624,7 @@ fun ConversationCard(conversation: ConversationEntity) {
                     color = WdsTheme.colors.colorContentDeemphasized
                 )
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
