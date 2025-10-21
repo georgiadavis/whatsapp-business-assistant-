@@ -10,9 +10,9 @@ import androidx.compose.ui.graphics.Color
 @Immutable
 open class WdsSemanticLightColors : WdsColorScheme() {
     override val color3pChatBackgroundWallpaper = BaseColors.wdsCoolGray75
-    override val colorAccent = BaseColors.wdsGreen500
-    override val colorAccentDeemphasized = BaseColors.wdsGreen100
-    override val colorAccentEmphasized = BaseColors.wdsGreen700
+    override val colorAccent = BaseColors.wdsCoolGray900
+    override val colorAccentDeemphasized = BaseColors.wdsWarmGray300Alpha15
+    override val colorAccentEmphasized = BaseColors.wdsCoolGray800
     override val colorActiveListRow = BaseColors.wdsBlackAlpha10
     override val colorActivityIndicator = BaseColors.wdsGreen400
     override val colorAlwaysBlack = BaseColors.wdsCoolGray1000
@@ -38,7 +38,7 @@ open class WdsSemanticLightColors : WdsColorScheme() {
     override val colorContentOnAccent = BaseColors.wdsWhiteOpaque
     override val colorContentRead = BaseColors.wdsCobalt400
     override val colorDivider = BaseColors.wdsCoolGrayAlpha10
-    override val colorFilterSurfaceSelected = BaseColors.wdsGreen100
+    override val colorFilterSurfaceSelected = BaseColors.wdsCoolGray200
     override val colorNegative = BaseColors.wdsRed400
     override val colorNegativeDeemphasized = BaseColors.wdsRed75
     override val colorNegativeEmphasized = BaseColors.wdsRed500

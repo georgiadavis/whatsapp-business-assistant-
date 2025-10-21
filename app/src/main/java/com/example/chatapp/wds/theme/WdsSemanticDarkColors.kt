@@ -9,9 +9,9 @@ import androidx.compose.runtime.Immutable
 @Immutable
 open class WdsSemanticDarkColors : WdsSemanticLightColors() {
     override val color3pChatBackgroundWallpaper = BaseColors.wdsCoolGray1000
-    override val colorAccent = BaseColors.wdsGreen450
-    override val colorAccentDeemphasized = BaseColors.wdsGreen800
-    override val colorAccentEmphasized = BaseColors.wdsGreen100
+    override val colorAccent = BaseColors.wdsCoolGray50
+    override val colorAccentDeemphasized = BaseColors.wdsCoolGray800
+    override val colorAccentEmphasized = BaseColors.wdsCoolGray50
     override val colorActiveListRow = BaseColors.wdsWhiteAlpha10
     override val colorActivityIndicator = BaseColors.wdsGreen400
     override val colorAlwaysBlack = BaseColors.wdsCoolGray1000
@@ -37,7 +37,7 @@ open class WdsSemanticDarkColors : WdsSemanticLightColors() {
     override val colorContentOnAccent = BaseColors.wdsCoolGray1000
     override val colorContentRead = BaseColors.wdsSkyBlue300
     override val colorDivider = BaseColors.wdsWhiteAlpha10
-    override val colorFilterSurfaceSelected = BaseColors.wdsGreen800
+    override val colorFilterSurfaceSelected = BaseColors.wdsCoolGray700
     override val colorNegative = BaseColors.wdsRed300
     override val colorNegativeDeemphasized = BaseColors.wdsRed800
     override val colorNegativeEmphasized = BaseColors.wdsRed200
