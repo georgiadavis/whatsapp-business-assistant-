@@ -8,10 +8,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,15 +51,36 @@ class MainActivity : ComponentActivity() {
         setContent {
             WdsTheme {
                 val navController = rememberNavController()
+                val currentRoute = navController.currentBackStackEntryFlow.collectAsState(initial = navController.currentBackStackEntry).value?.destination?.route
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(WdsTheme.colors.colorSurfaceDefault)
-                ) {
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    containerColor = WdsTheme.colors.colorSurfaceDefault,
+                    bottomBar = {
+                        // Only show bottom bar for main screens (chat_list and assistant)
+                        if (currentRoute in listOf("chat_list", Screen.Assistant.route)) {
+                            PersistentBottomBar(
+                                selectedRoute = currentRoute ?: "chat_list",
+                                onChatsClick = {
+                                    if (currentRoute != "chat_list") {
+                                        navController.navigate("chat_list") {
+                                            popUpTo("chat_list") { inclusive = true }
+                                        }
+                                    }
+                                },
+                                onAssistantClick = {
+                                    if (currentRoute != Screen.Assistant.route) {
+                                        navController.navigate(Screen.Assistant.route)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                ) { paddingValues ->
                     NavHost(
                         navController = navController,
-                        startDestination = "chat_list"
+                        startDestination = "chat_list",
+                        modifier = Modifier.padding(paddingValues)
                     ) {
 
                     composable(
@@ -458,6 +483,120 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun PersistentBottomBar(
+    selectedRoute: String,
+    onChatsClick: () -> Unit,
+    onAssistantClick: () -> Unit
+) {
+    Column {
+        Divider(
+            color = WdsTheme.colors.colorDivider,
+            thickness = WdsTheme.dimensions.wdsBorderWidthThin
+        )
+        NavigationBar(
+            containerColor = WdsTheme.colors.colorSurfaceDefault,
+            tonalElevation = 0.dp
+        ) {
+            NavigationBarItem(
+                selected = selectedRoute == "chat_list",
+                onClick = onChatsClick,
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = WdsTheme.colors.colorAccentEmphasized,
+                    selectedTextColor = WdsTheme.colors.colorContentDefault,
+                    unselectedIconColor = WdsTheme.colors.colorContentDefault,
+                    unselectedTextColor = WdsTheme.colors.colorContentDefault,
+                    indicatorColor = WdsTheme.colors.colorFilterSurfaceSelected
+                ),
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_chats_rounded),
+                        contentDescription = "Chats"
+                    )
+                },
+                label = {
+                    Text(
+                        text = "Chats",
+                        style = if (selectedRoute == "chat_list") WdsTheme.typography.body3InlineLink else WdsTheme.typography.body3Emphasized
+                    )
+                }
+            )
+            
+            NavigationBarItem(
+                selected = false,
+                onClick = { },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = WdsTheme.colors.colorAccentEmphasized,
+                    selectedTextColor = WdsTheme.colors.colorContentDefault,
+                    unselectedIconColor = WdsTheme.colors.colorContentDefault,
+                    unselectedTextColor = WdsTheme.colors.colorContentDefault,
+                    indicatorColor = WdsTheme.colors.colorFilterSurfaceSelected
+                ),
+                icon = {
+                    Icon(
+                        imageVector = androidx.compose.material.icons.Icons.Outlined.Call,
+                        contentDescription = "Calls"
+                    )
+                },
+                label = {
+                    Text(
+                        text = "Calls",
+                        style = WdsTheme.typography.body3Emphasized
+                    )
+                }
+            )
+            
+            NavigationBarItem(
+                selected = false,
+                onClick = { },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = WdsTheme.colors.colorAccentEmphasized,
+                    selectedTextColor = WdsTheme.colors.colorContentDefault,
+                    unselectedIconColor = WdsTheme.colors.colorContentDefault,
+                    unselectedTextColor = WdsTheme.colors.colorContentDefault,
+                    indicatorColor = WdsTheme.colors.colorFilterSurfaceSelected
+                ),
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_updates_rounded),
+                        contentDescription = "Updates"
+                    )
+                },
+                label = {
+                    Text(
+                        text = "Updates",
+                        style = WdsTheme.typography.body3Emphasized
+                    )
+                }
+            )
+            
+            NavigationBarItem(
+                selected = selectedRoute == Screen.Assistant.route,
+                onClick = onAssistantClick,
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = WdsTheme.colors.colorAccentEmphasized,
+                    selectedTextColor = WdsTheme.colors.colorContentDefault,
+                    unselectedIconColor = WdsTheme.colors.colorContentDefault,
+                    unselectedTextColor = WdsTheme.colors.colorContentDefault,
+                    indicatorColor = WdsTheme.colors.colorFilterSurfaceSelected
+                ),
+                icon = {
+                    Icon(
+                        imageVector = androidx.compose.material.icons.Icons.Outlined.AutoAwesome,
+                        contentDescription = "Assistant"
+                    )
+                },
+                label = {
+                    Text(
+                        text = "Assistant",
+                        style = if (selectedRoute == Screen.Assistant.route) WdsTheme.typography.body3InlineLink else WdsTheme.typography.body3Emphasized
+                    )
+                }
+            )
         }
     }
 }

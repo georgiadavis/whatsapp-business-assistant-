@@ -32,9 +32,6 @@ fun AssistantScreen(
         containerColor = WdsTheme.colors.colorChatBackgroundWallpaper,
         topBar = {
             AssistantTopBar(onNavigateBack = onNavigateBack)
-        },
-        bottomBar = {
-            AssistantBottomBar(onNavigateBack = onNavigateBack)
         }
     ) { paddingValues ->
         Box(

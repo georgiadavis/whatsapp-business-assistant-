@@ -154,16 +154,6 @@ fun ChatListScreen(
                 }
             }
         },
-        bottomBar = {
-            ChatListBottomBar(
-                selectedTab = 0,  // Chats tab is selected
-                unreadChats = uiState.conversations.count { it.unreadCount > 0 },
-                hasUpdates = false,
-                callsBadgeCount = 0,
-                onChatsClick = { /* Already on chats */ },
-                onAssistantClick = onDesignLibraryClick
-            )
-        },
         floatingActionButton = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
