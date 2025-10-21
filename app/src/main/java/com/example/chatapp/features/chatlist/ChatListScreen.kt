@@ -706,65 +706,6 @@ private fun ChatListBottomBar(
             icon = {
                 BadgedBox(
                     badge = {
-                        if (hasUpdates) {
-                            Badge(
-                                modifier = Modifier.size(WdsTheme.dimensions.wdsSpacingSingle),
-                                containerColor = WdsTheme.colors.colorAccent
-                            )
-                        }
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_updates_rounded),
-                        contentDescription = "Updates"
-                    )
-                }
-            },
-            label = {
-                Text(
-                    text = "Updates",
-                    style = if (selectedTab == 1) WdsTheme.typography.body3InlineLink else WdsTheme.typography.body3Emphasized
-                )
-            }
-        )
-        
-        NavigationBarItem(
-            selected = selectedTab == 2,
-            onClick = { },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = WdsTheme.colors.colorAccentEmphasized,
-                selectedTextColor = WdsTheme.colors.colorContentDefault,
-                unselectedIconColor = WdsTheme.colors.colorContentDefault,
-                unselectedTextColor = WdsTheme.colors.colorContentDefault,
-                indicatorColor = WdsTheme.colors.colorFilterSurfaceSelected
-            ),
-            icon = {
-                Icon(
-                    painter = painterResource(R.drawable.ic_communities_rounded),
-                    contentDescription = "Communities"
-                )
-            },
-            label = {
-                Text(
-                    text = "Communities",
-                    style = if (selectedTab == 2) WdsTheme.typography.body3InlineLink else WdsTheme.typography.body3Emphasized
-                )
-            }
-        )
-        
-        NavigationBarItem(
-            selected = selectedTab == 3,
-            onClick = { },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = WdsTheme.colors.colorAccentEmphasized,
-                selectedTextColor = WdsTheme.colors.colorContentDefault,
-                unselectedIconColor = WdsTheme.colors.colorContentDefault,
-                unselectedTextColor = WdsTheme.colors.colorContentDefault,
-                indicatorColor = WdsTheme.colors.colorFilterSurfaceSelected
-            ),
-            icon = {
-                BadgedBox(
-                    badge = {
                         if (callsBadgeCount > 0) {
                             Badge(
                                 containerColor = WdsTheme.colors.colorAccent,
@@ -788,6 +729,65 @@ private fun ChatListBottomBar(
             label = {
                 Text(
                     text = "Calls",
+                    style = if (selectedTab == 1) WdsTheme.typography.body3InlineLink else WdsTheme.typography.body3Emphasized
+                )
+            }
+        )
+          
+        NavigationBarItem(
+            selected = selectedTab == 2,
+            onClick = { },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = WdsTheme.colors.colorAccentEmphasized,
+                selectedTextColor = WdsTheme.colors.colorContentDefault,
+                unselectedIconColor = WdsTheme.colors.colorContentDefault,
+                unselectedTextColor = WdsTheme.colors.colorContentDefault,
+                indicatorColor = WdsTheme.colors.colorFilterSurfaceSelected
+            ),
+            icon = {
+                BadgedBox(
+                    badge = {
+                        if (hasUpdates) {
+                            Badge(
+                                modifier = Modifier.size(WdsTheme.dimensions.wdsSpacingSingle),
+                                containerColor = WdsTheme.colors.colorAccent
+                            )
+                        }
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_updates_rounded),
+                        contentDescription = "Updates"
+                    )
+                }
+            },
+            label = {
+                Text(
+                    text = "Updates",
+                    style = if (selectedTab == 2) WdsTheme.typography.body3InlineLink else WdsTheme.typography.body3Emphasized
+                )
+            }
+        )
+          
+        NavigationBarItem(
+            selected = selectedTab == 3,
+            onClick = { },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = WdsTheme.colors.colorAccentEmphasized,
+                selectedTextColor = WdsTheme.colors.colorContentDefault,
+                unselectedIconColor = WdsTheme.colors.colorContentDefault,
+                unselectedTextColor = WdsTheme.colors.colorContentDefault,
+                indicatorColor = WdsTheme.colors.colorFilterSurfaceSelected
+            ),
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Storefront,
+                    contentDescription = "Tools"
+                )
+            },
+            label = {
+                Text(
+                    text = "Tools",
                     style = if (selectedTab == 3) WdsTheme.typography.body3InlineLink else WdsTheme.typography.body3Emphasized
                 )
             }
