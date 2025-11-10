@@ -7,4 +7,5 @@ sealed class Screen(val route: String) {
     data object Components : Screen("components")
     data object Icons : Screen("icons")
     data object Assistant : Screen("assistant")
+    data object AssistantChat : Screen("assistant_chat")
 }

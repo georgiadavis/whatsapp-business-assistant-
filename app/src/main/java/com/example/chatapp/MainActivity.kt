@@ -39,6 +39,7 @@ import com.example.chatapp.ui.screens.TypeScreen
 import com.example.chatapp.ui.screens.ComponentsScreen
 import com.example.chatapp.ui.screens.IconsScreen
 import com.example.chatapp.features.assistant.AssistantScreen
+import com.example.chatapp.features.assistant.AssistantChatScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import com.example.chatapp.wds.theme.WdsTheme
@@ -477,6 +478,44 @@ class MainActivity : ComponentActivity() {
                         }
                     ) {
                         AssistantScreen(
+                            onNavigateBack = { navController.popBackStack() },
+                            onAdvertiseClick = {
+                                navController.navigate(Screen.AssistantChat.route)
+                            }
+                        )
+                    }
+                    
+                    composable(
+                        route = Screen.AssistantChat.route,
+                        enterTransition = {
+                            slideInHorizontally(
+                                initialOffsetX = { it },
+                                animationSpec = tween(
+                                    durationMillis = 300,
+                                    easing = FastOutSlowInEasing
+                                )
+                            ) + fadeIn(
+                                animationSpec = tween(
+                                    durationMillis = 150,
+                                    delayMillis = 150
+                                )
+                            )
+                        },
+                        popExitTransition = {
+                            slideOutHorizontally(
+                                targetOffsetX = { it },
+                                animationSpec = tween(
+                                    durationMillis = 300,
+                                    easing = FastOutSlowInEasing
+                                )
+                            ) + fadeOut(
+                                animationSpec = tween(
+                                    durationMillis = 150
+                                )
+                            )
+                        }
+                    ) {
+                        AssistantChatScreen(
                             onNavigateBack = { navController.popBackStack() }
                         )
                     }
@@ -525,7 +564,7 @@ private fun PersistentBottomBar(
                     )
                 }
             )
-            
+
             NavigationBarItem(
                 selected = false,
                 onClick = { },
@@ -549,7 +588,7 @@ private fun PersistentBottomBar(
                     )
                 }
             )
-            
+
             NavigationBarItem(
                 selected = false,
                 onClick = { },
@@ -573,7 +612,7 @@ private fun PersistentBottomBar(
                     )
                 }
             )
-            
+
             NavigationBarItem(
                 selected = selectedRoute == Screen.Assistant.route,
                 onClick = onAssistantClick,

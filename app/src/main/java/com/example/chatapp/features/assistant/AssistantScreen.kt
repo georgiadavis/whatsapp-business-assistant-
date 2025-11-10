@@ -25,7 +25,8 @@ import com.example.chatapp.wds.theme.WdsTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AssistantScreen(
-    onNavigateBack: () -> Unit = {}
+    onNavigateBack: () -> Unit = {},
+    onAdvertiseClick: () -> Unit = {}
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -48,7 +49,7 @@ fun AssistantScreen(
                 item {
                     Spacer(modifier = Modifier.height(40.dp))
                 }
-
+                
                 // Greeting
                 item {
                     Text(
@@ -59,7 +60,7 @@ fun AssistantScreen(
                     )
                     Spacer(modifier = Modifier.height(WdsTheme.dimensions.wdsSpacingQuad))
                 }
-
+                
                 // Quick Actions Card
                 item {
                     Surface(
@@ -78,37 +79,37 @@ fun AssistantScreen(
                                 horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingSingle)
                             ) {
                                 QuickActionButton(
-                                    icon = Icons.Outlined.Edit,
-                                    label = "Write",
+                                    icon = Icons.Outlined.AutoAwesome,
+                                    label = "Business AI",
                                     iconTint = Color(0xFF10A37F),
                                     modifier = Modifier.weight(1f),
                                     onClick = {}
                                 )
                                 QuickActionButton(
-                                    icon = Icons.Outlined.CalendarMonth,
-                                    label = "Plan",
+                                    icon = Icons.Outlined.Inventory,
+                                    label = "Catalog",
                                     iconTint = Color(0xFF1E88E5),
                                     modifier = Modifier.weight(1f),
                                     onClick = {}
                                 )
                             }
-
+                            
                             Spacer(modifier = Modifier.height(WdsTheme.dimensions.wdsSpacingSingle))
-
+                            
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingSingle)
                             ) {
                                 QuickActionButton(
-                                    icon = Icons.Outlined.AttachFile,
-                                    label = "Summarize",
+                                    icon = Icons.Outlined.Campaign,
+                                    label = "Advertise",
                                     iconTint = Color(0xFF7C3AED),
                                     modifier = Modifier.weight(1f),
-                                    onClick = {}
+                                    onClick = onAdvertiseClick
                                 )
                                 QuickActionButton(
-                                    icon = Icons.Outlined.Image,
-                                    label = "Create image",
+                                    icon = Icons.Outlined.Receipt,
+                                    label = "Orders",
                                     iconTint = Color(0xFFEC4899),
                                     modifier = Modifier.weight(1f),
                                     onClick = {}
@@ -118,7 +119,7 @@ fun AssistantScreen(
                     }
                     Spacer(modifier = Modifier.height(WdsTheme.dimensions.wdsSpacingDouble))
                 }
-
+                
                 // Suggested Prompts
                 item {
                     Surface(
@@ -131,33 +132,45 @@ fun AssistantScreen(
                     ) {
                         Column {
                             SuggestedPromptItem(
-                                emoji = "⚽",
-                                text = "See FIFA sports updates",
+                                emoji = "🏷️",
+                                text = "Labels",
                                 showDivider = true,
                                 onClick = {}
                             )
                             SuggestedPromptItem(
-                                emoji = "📚",
-                                text = "Explain a concept",
+                                emoji = "💬",
+                                text = "Greeting message",
                                 showDivider = true,
                                 onClick = {}
                             )
                             SuggestedPromptItem(
-                                emoji = "📁",
-                                text = "Review my resume",
+                                emoji = "📤",
+                                text = "Away message",
                                 showDivider = true,
                                 onClick = {}
                             )
                             SuggestedPromptItem(
-                                emoji = "📝",
-                                text = "Write a Ask anything",
+                                emoji = "⚡",
+                                text = "Quick replies",
+                                showDivider = true,
+                                onClick = {}
+                            )
+                            SuggestedPromptItem(
+                                emoji = "👤",
+                                text = "Manage profile",
+                                showDivider = true,
+                                onClick = {}
+                            )
+                            SuggestedPromptItem(
+                                emoji = "📱",
+                                text = "Facebook & Instagram",
                                 showDivider = false,
                                 onClick = {}
                             )
                         }
                     }
                 }
-
+                
                 item {
                     Spacer(modifier = Modifier.height(40.dp))
                 }
@@ -412,6 +425,153 @@ private fun AssistantBottomBar(
 }
 
 @Composable
+private fun AIMessageBubble(
+    message: String,
+    timestamp: String
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Surface(
+            shape = RoundedCornerShape(
+                topStart = 12.dp,
+                topEnd = 12.dp,
+                bottomEnd = 12.dp,
+                bottomStart = 4.dp
+            ),
+            color = WdsTheme.colors.colorSurfaceDefault,
+            modifier = Modifier.widthIn(max = 300.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(WdsTheme.dimensions.wdsSpacingSingle)
+            ) {
+                Text(
+                    text = message,
+                    style = WdsTheme.typography.body1,
+                    color = WdsTheme.colors.colorContentDefault
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = timestamp,
+                    style = WdsTheme.typography.body3,
+                    color = WdsTheme.colors.colorContentDeemphasized
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SuggestionChip(
+    text: String,
+    onClick: () -> Unit
+) {
+    Surface(
+        onClick = onClick,
+        shape = WdsTheme.shapes.double,
+        color = WdsTheme.colors.colorSurfaceDefault,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(
+                    horizontal = WdsTheme.dimensions.wdsSpacingDouble,
+                    vertical = WdsTheme.dimensions.wdsSpacingSinglePlus
+                ),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = text,
+                style = WdsTheme.typography.body1,
+                color = WdsTheme.colors.colorContentDefault,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                imageVector = Icons.Outlined.ArrowForward,
+                contentDescription = null,
+                tint = WdsTheme.colors.colorContentDeemphasized,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ChatInputBar() {
+    Surface(
+        color = WdsTheme.colors.colorSurfaceDefault,
+        shadowElevation = 4.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(WdsTheme.dimensions.wdsSpacingSingle),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingHalf)
+        ) {
+            TextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.weight(1f),
+                placeholder = {
+                    Text(
+                        text = "Ask anything",
+                        style = WdsTheme.typography.body1,
+                        color = WdsTheme.colors.colorContentDeemphasized
+                    )
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = WdsTheme.colors.colorSurfaceEmphasized,
+                    unfocusedContainerColor = WdsTheme.colors.colorSurfaceEmphasized,
+                    disabledContainerColor = WdsTheme.colors.colorSurfaceEmphasized,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+                shape = RoundedCornerShape(24.dp),
+                trailingIcon = {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingHalf)
+                    ) {
+                        IconButton(onClick = {}) {
+                            Icon(
+                                imageVector = Icons.Outlined.AttachFile,
+                                contentDescription = "Attach",
+                                tint = WdsTheme.colors.colorContentDefault
+                            )
+                        }
+                        IconButton(onClick = {}) {
+                            Icon(
+                                imageVector = Icons.Outlined.CameraAlt,
+                                contentDescription = "Camera",
+                                tint = WdsTheme.colors.colorContentDefault
+                            )
+                        }
+                    }
+                }
+            )
+            
+            IconButton(
+                onClick = {},
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(WdsTheme.colors.colorAccent)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Mic,
+                    contentDescription = "Voice",
+                    tint = Color.White
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun SuggestedPromptItem(
     emoji: String,
     text: String,
@@ -427,8 +587,7 @@ private fun SuggestedPromptItem(
                     horizontal = WdsTheme.dimensions.wdsSpacingDouble,
                     vertical = WdsTheme.dimensions.wdsSpacingSinglePlus
                 ),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -445,13 +604,6 @@ private fun SuggestedPromptItem(
                     color = WdsTheme.colors.colorContentDefault
                 )
             }
-
-            Icon(
-                imageVector = Icons.Outlined.ArrowOutward,
-                contentDescription = null,
-                tint = WdsTheme.colors.colorContentDeemphasized,
-                modifier = Modifier.size(18.dp)
-            )
         }
 
         if (showDivider) {
