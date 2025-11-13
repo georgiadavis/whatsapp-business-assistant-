@@ -1,0 +1,188 @@
+[
+  {
+    "title": "About WhatsApp Business labels",
+    "category": "Labels",
+    "content": "Labels help you organize your chats and customers. You can create custom labels to categorize conversations, such as 'New customer', 'Paid', 'Pending', etc. To use labels: 1) Open a chat, 2) Tap More options > Labels, 3) Select or create a label. You can also filter chats by label from the main chat list.",
+    "intent": "Labels"
+  },
+  {
+    "title": "How to create and manage your product catalog",
+    "category": "Catalog",
+    "content": "The catalog feature allows you to showcase your products and services within WhatsApp. To create a catalog: 1) Go to Business Tools > Catalog, 2) Tap Add Product, 3) Add photos, name, price, description, and link. Customers can browse your catalog and inquire about products directly in the chat.",
+    "intent": "Catalog"
+  },
+  {
+    "title": "Setting up quick replies",
+    "category": "Automation",
+    "content": "Quick replies help you respond faster to frequently asked questions. To create quick replies: 1) Go to Business Tools > Quick Replies, 2) Tap Add, 3) Enter a shortcut (e.g., '/hours') and your message. When chatting, type the shortcut to insert your saved response.",
+    "intent": "Automation"
+  },
+  {
+    "title": "How to set up greeting messages",
+    "category": "Automation",
+    "content": "Greeting messages are automatically sent to customers when they first message your business or haven't contacted you in 14 days. To set up: 1) Go to Business Tools > Greeting message, 2) Turn on Send greeting message, 3) Customize your message. This helps engage customers immediately.",
+    "intent": "Automation"
+  },
+  {
+    "title": "Understanding WhatsApp Business statistics",
+    "category": "Analytics",
+    "content": "Business statistics show metrics about your messages. To view stats: Go to Business Tools > Statistics. You'll see: messages sent/delivered/read, received messages, and more. Use these insights to understand customer engagement and improve your business communication.",
+    "intent": "Analytics"
+  },
+  {
+    "title": "How to set up away messages",
+    "category": "Automation",
+    "content": "Away messages let customers know you're unavailable. To set up: 1) Go to Business Tools > Away message, 2) Turn on Send away message, 3) Choose when to send it (Always, Outside business hours, or Custom schedule), 4) Write your message. You can include information about when you'll be back or alternative contact methods.",
+    "intent": "Automation"
+  },
+  {
+    "title": "Creating a business profile",
+    "category": "Business_Profile",
+    "content": "Your business profile helps customers find and trust your business. To set up: 1) Go to Settings > Business Tools > Business Profile, 2) Add your business name, category, description, address, hours, and website. A complete profile builds credibility and makes it easier for customers to contact you.",
+    "intent": "Business_Profile"
+  },
+  {
+    "title": "Adding products to your catalog",
+    "category": "Catalog",
+    "content": "To add products to your catalog: 1) Open Business Tools > Catalog, 2) Tap Add Product, 3) Upload product photos (up to 10), 4) Enter product name and price, 5) Add description and product link (optional), 6) Tap Save. You can add unlimited products to showcase your full inventory.",
+    "intent": "Catalog"
+  },
+  {
+    "title": "Sharing your catalog with customers",
+    "category": "Catalog",
+    "content": "Share your catalog with customers in several ways: 1) In a chat, tap Attach > Catalog to share your entire catalog, 2) Tap a specific product to share individual items, 3) Include a catalog link in your business profile. Customers can browse products and ask questions directly in the chat.",
+    "intent": "Catalog"
+  },
+  {
+    "title": "How to organize chats with labels",
+    "category": "Labels",
+    "content": "Use labels to organize and prioritize customer conversations: 1) Create labels for different categories (New order, Pending payment, Completed, VIP customer), 2) Assign labels to chats by opening a chat > More options > Labels, 3) Filter chats by label from the Chats screen to quickly find specific conversations. You can assign multiple labels to one chat.",
+    "intent": "Labels"
+  },
+  {
+    "title": "Viewing message statistics",
+    "category": "Analytics",
+    "content": "WhatsApp Business provides insights about your messages: 1) Go to Business Tools > Statistics, 2) View metrics including messages sent, delivered, read, and received, 3) See statistics for different time periods (last 7 or 30 days). Use this data to understand customer engagement and optimal messaging times.",
+    "intent": "Analytics"
+  },
+  {
+    "title": "Creating effective quick replies",
+    "category": "Automation",
+    "content": "Quick replies save time for common responses. Best practices: 1) Use clear shortcuts (e.g., /hours for business hours), 2) Include complete information in your responses, 3) Personalize with the customer's name using placeholders, 4) Create quick replies for FAQs like pricing, availability, shipping info, and contact details.",
+    "intent": "Automation"
+  },
+  {
+    "title": "Setting business hours in your profile",
+    "category": "Business_Profile",
+    "content": "Add business hours to let customers know when you're available: 1) Go to Settings > Business Tools > Business Profile, 2) Tap Hours, 3) Select your time zone and business hours for each day, 4) Tap Save. Customers will see your hours when they view your profile, helping set expectations for response times.",
+    "intent": "Business_Profile"
+  },
+  {
+    "title": "Using broadcast lists for announcements",
+    "category": "Messages",
+    "content": "Broadcast lists let you send messages to multiple customers at once: 1) Tap More options > New broadcast, 2) Select recipients (they must have your number saved), 3) Create the list, 4) Send your message. Each recipient receives it as a normal message. Use for announcements, promotions, or updates.",
+    "intent": "Messages"
+  },
+  {
+    "title": "Managing customer information with labels",
+    "category": "Labels",
+    "content": "Labels help track customer status and preferences: 1) Create labels for customer stages (New, Active, Inactive), 2) Add labels for preferences (Vegetarian, Express delivery), 3) Use color-coding for quick visual identification, 4) Combine with search to find specific customer groups. This helps personalize service and follow up effectively.",
+    "intent": "Labels"
+  },
+  {
+    "title": "Optimizing your product catalog",
+    "category": "Catalog",
+    "content": "Make your catalog more effective: 1) Use high-quality product photos with good lighting, 2) Write clear, detailed descriptions including features and benefits, 3) Price items accurately and update regularly, 4) Organize products into collections for easier browsing, 5) Include product links to your website or payment page for easy purchasing.",
+    "intent": "Catalog"
+  },
+  {
+    "title": "Creating a short link for your business",
+    "category": "Business_Profile",
+    "content": "WhatsApp Business provides a short link (wa.me link) for easy customer contact: 1) Go to Business Tools > Short link, 2) Your link will be wa.me/yournumber, 3) Share this link on social media, website, or marketing materials, 4) Customers can tap the link to start a WhatsApp chat with you instantly without saving your number.",
+    "intent": "Business_Profile"
+  },
+  {
+    "title": "Best practices for greeting messages",
+    "category": "Automation",
+    "content": "Create effective greeting messages: 1) Keep it friendly and professional, 2) Let customers know you've received their message, 3) Set expectations for response time, 4) Include your business hours if relevant, 5) Guide them on what information to provide. Example: 'Hi! Thanks for contacting [Business Name]. We'll get back to you within 2 hours during business hours (9am-6pm). How can we help you today?'",
+    "intent": "Automation"
+  },
+  {
+    "title": "Understanding message delivery status",
+    "category": "Messages",
+    "content": "WhatsApp shows different message statuses: 1) One gray checkmark = Message sent to server, 2) Two gray checkmarks = Message delivered to recipient's phone, 3) Two blue checkmarks = Message read by recipient. If you see a clock icon, the message is still sending. Red exclamation mark means the message failed to send.",
+    "intent": "Messages"
+  },
+  {
+    "title": "Using click-to-chat links",
+    "category": "Business_Profile",
+    "content": "Click-to-chat links let customers message you without saving your number: 1) Create a link using the format: https://wa.me/yournumber, 2) Add a pre-filled message: https://wa.me/yournumber?text=Hello, 3) Share on your website, social media, or ads, 4) Track which links drive the most customer conversations. This makes it easy for customers to reach you.",
+    "intent": "Business_Profile"
+  },
+  {
+    "title": "Organizing customer conversations efficiently",
+    "category": "Labels",
+    "content": "Use labels strategically to manage conversations: 1) Create workflow labels (To Reply, Follow Up, Resolved), 2) Add priority labels (Urgent, VIP), 3) Use category labels (Sales, Support, Feedback), 4) Regularly review and update label assignments, 5) Archive resolved conversations to keep your inbox clean while maintaining conversation history.",
+    "intent": "Labels"
+  },
+  {
+    "title": "Setting up payment methods",
+    "category": "Payment",
+    "content": "WhatsApp Business supports in-app payments in select countries: 1) Go to Settings > Business Tools > Payment methods, 2) Follow the setup process for your country, 3) Add your payment account details, 4) Once verified, you can send payment requests and receive payments directly in chats. Customers can pay securely without leaving WhatsApp.",
+    "intent": "Payment"
+  },
+  {
+    "title": "Creating customer support workflows with labels",
+    "category": "Labels",
+    "content": "Build efficient support workflows using labels: 1) Create status labels (Open, In Progress, Waiting for Response, Resolved), 2) Assign issues to team members with labels, 3) Track response time by labeling urgent vs. normal priority, 4) Use labels to identify recurring issues, 5) Create monthly reports by reviewing labeled conversations to improve service quality.",
+    "intent": "Labels"
+  },
+  {
+    "title": "Personalizing automated messages",
+    "category": "Automation",
+    "content": "Make automated messages feel personal: 1) Use customer's name when possible, 2) Reference their specific inquiry or previous conversation, 3) Keep tone conversational and friendly, 4) Include specific information about your business, 5) Provide clear next steps or call-to-action. Balance automation with authenticity to maintain customer relationships.",
+    "intent": "Automation"
+  },
+  {
+    "title": "Managing multiple product collections",
+    "category": "Catalog",
+    "content": "Organize your catalog with collections: 1) Group products by category (Summer Collection, Sale Items, New Arrivals), 2) Create collections for different customer segments, 3) Update collections seasonally or for promotions, 4) Share specific collections with targeted customers, 5) Use collections to showcase bestsellers or featured products. This helps customers find what they're looking for quickly.",
+    "intent": "Catalog"
+  },
+  {
+    "title": "Tracking business growth with statistics",
+    "category": "Analytics",
+    "content": "Use WhatsApp Business statistics to grow your business: 1) Monitor message volume trends to identify busy periods, 2) Track read rates to optimize messaging times, 3) Compare metrics week-over-week to measure growth, 4) Identify days with highest customer engagement, 5) Use insights to adjust staffing, posting times, and response strategies for better customer service.",
+    "intent": "Analytics"
+  },
+  {
+    "title": "Building customer relationships with messaging",
+    "category": "Development",
+    "content": "Use WhatsApp to strengthen customer relationships: 1) Respond promptly to build trust, 2) Personalize conversations with customer history, 3) Follow up after purchases to ensure satisfaction, 4) Share exclusive offers with loyal customers, 5) Request feedback to improve service. Regular, meaningful communication keeps customers engaged and encourages repeat business.",
+    "intent": "Development"
+  },
+  {
+    "title": "Using WhatsApp Business for customer service",
+    "category": "Messages",
+    "content": "Provide excellent customer service on WhatsApp: 1) Set clear response time expectations, 2) Use quick replies for common questions, 3) Keep customers updated on order status, 4) Resolve issues promptly and professionally, 5) Follow up to ensure satisfaction. WhatsApp's direct communication builds stronger customer relationships than email or phone support.",
+    "intent": "Messages"
+  },
+  {
+    "title": "Promoting your WhatsApp Business number",
+    "category": "Business_Profile",
+    "content": "Get customers to contact you on WhatsApp: 1) Add WhatsApp button to your website and social media, 2) Include your WhatsApp number on business cards and marketing materials, 3) Promote special 'WhatsApp-only' offers, 4) Use click-to-chat links in email signatures, 5) Run Facebook/Instagram ads that open WhatsApp conversations. Make it easy for customers to reach you.",
+    "intent": "Business_Profile"
+  },
+  {
+    "title": "Managing customer expectations with away messages",
+    "category": "Automation",
+    "content": "Use away messages effectively: 1) Set up different messages for different times (after hours, weekends, holidays), 2) Include expected response time, 3) Provide emergency contact info if needed, 4) Direct to self-service resources (website, FAQ), 5) Keep message professional but friendly. This maintains customer satisfaction even when you're unavailable.",
+    "intent": "Automation"
+  },
+  {
+    "title": "Converting conversations into sales",
+    "category": "Development",
+    "content": "Turn WhatsApp conversations into sales: 1) Share your catalog early in conversations, 2) Answer questions thoroughly with product details, 3) Use photos and videos to showcase products, 4) Make purchasing easy with payment links or catalog, 5) Follow up on abandoned carts or inquiries. Personal attention on WhatsApp often converts better than traditional e-commerce.",
+    "intent": "Development"
+  }
+]

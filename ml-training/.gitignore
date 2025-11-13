@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Environment variables and secrets
+.env
+*.key
+*.pem
+secrets.json
+
+# Data files
+*.csv
+*.jsonl
+*.json
+
+# Outputs
+outputs/
+
+# Exceptions - keep these files
+!help_articles_manual.json
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
