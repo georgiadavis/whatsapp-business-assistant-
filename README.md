@@ -1,4 +1,5 @@
-# SimpleWhatsApp
+# Whatsapp Business Assistant Prototype 
+Forked from SimpleWhatsApp template @johnneumann
 
 A fully functional WhatsApp-style Android chat application built with Jetpack Compose and the WhatsApp Design System (WDS). This app demonstrates modern Android development practices with a complete chat experience, local database storage, and a comprehensive design system library.
 
