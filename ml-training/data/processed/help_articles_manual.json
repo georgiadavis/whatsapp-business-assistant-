@@ -184,5 +184,47 @@
     "category": "Development",
     "content": "Turn WhatsApp conversations into sales: 1) Share your catalog early in conversations, 2) Answer questions thoroughly with product details, 3) Use photos and videos to showcase products, 4) Make purchasing easy with payment links or catalog, 5) Follow up on abandoned carts or inquiries. Personal attention on WhatsApp often converts better than traditional e-commerce.",
     "intent": "Development"
+  },
+  {
+    "title": "About WhatsApp Business verification (green checkmark)",
+    "category": "Business_Profile",
+    "content": "The green checkmark badge indicates that WhatsApp has confirmed this is an authentic business account. Verified accounts appear with a green checkmark next to the business name. This badge helps customers identify legitimate businesses and builds trust. Verification is available for businesses with a significant presence and following.",
+    "intent": "Business_Profile"
+  },
+  {
+    "title": "How to get your business verified on WhatsApp",
+    "category": "Business_Profile",
+    "content": "To get verified on WhatsApp Business: 1) Your business must meet WhatsApp's verification criteria (established brand, significant following, authentic presence), 2) Complete your business profile fully with accurate information, 3) Use WhatsApp Business API (verification is primarily for API users), 4) Apply through a WhatsApp Business Solution Provider. Note: Verification is not automatically available for all businesses and is typically reserved for larger, well-known brands.",
+    "intent": "Business_Profile"
+  },
+  {
+    "title": "Benefits of WhatsApp Business verification",
+    "category": "Business_Profile",
+    "content": "Benefits of the verified green checkmark: 1) Increased customer trust - customers know they're contacting the real business, 2) Enhanced credibility and brand recognition, 3) Higher visibility in search results, 4) Protection against impersonation, 5) Professional appearance that sets you apart from competitors. Verified accounts are more likely to be trusted by customers making purchase decisions.",
+    "intent": "Business_Profile"
+  },
+  {
+    "title": "Requirements for WhatsApp Business verification",
+    "category": "Business_Profile",
+    "content": "Verification requirements: 1) Your business must be a notable, authentic entity, 2) Complete business profile with accurate information (name, address, website, description), 3) Established online and offline presence, 4) Typically requires use of WhatsApp Business API (not just the app), 5) Business must comply with WhatsApp policies. Small businesses using the WhatsApp Business app may not qualify for verification - it's primarily for larger brands using the API platform.",
+    "intent": "Business_Profile"
+  },
+  {
+    "title": "Difference between verified and unverified WhatsApp Business accounts",
+    "category": "Business_Profile",
+    "content": "Verified vs. unverified accounts: Verified accounts (green checkmark) have been authenticated by WhatsApp and are typically large, well-known businesses. Unverified accounts can still use all WhatsApp Business features (catalog, labels, quick replies, etc.) but don't have the green badge. Most small and medium businesses are unverified, and this doesn't limit functionality. Focus on providing great customer service regardless of verification status.",
+    "intent": "Business_Profile"
+  },
+  {
+    "title": "Can small businesses get verified on WhatsApp?",
+    "category": "Business_Profile",
+    "content": "Verification is challenging for small businesses. WhatsApp verification is primarily designed for large, established brands using the WhatsApp Business API. Small businesses using the WhatsApp Business app typically cannot get verified. However, you can still build trust without verification by: 1) Completing your business profile thoroughly, 2) Responding promptly to customers, 3) Providing excellent service, 4) Maintaining consistent branding, 5) Encouraging satisfied customers to recommend you. Your reputation and service quality matter more than a verification badge.",
+    "intent": "Business_Profile"
+  },
+  {
+    "title": "What is WhatsApp Business API and how does it relate to verification",
+    "category": "Business_Profile",
+    "content": "WhatsApp Business API is an enterprise solution for medium to large businesses with high message volumes. Unlike the WhatsApp Business app (for small businesses), the API allows: 1) Integration with CRM and other business systems, 2) Multiple team members handling messages, 3) Automated messages and chatbots, 4) Higher message limits, 5) Verification eligibility. The API requires working with an official WhatsApp Business Solution Provider and has associated costs. Most businesses seeking verification need to use the API platform.",
+    "intent": "Business_Profile"
   }
 ]

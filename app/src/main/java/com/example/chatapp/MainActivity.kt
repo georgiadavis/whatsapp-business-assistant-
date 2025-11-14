@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Call
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -58,8 +59,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     containerColor = WdsTheme.colors.colorSurfaceDefault,
                     bottomBar = {
-                        // Only show bottom bar for main screens (chat_list and assistant)
-                        if (currentRoute in listOf("chat_list", Screen.Assistant.route)) {
+                        // Only show bottom bar for main screens
+                        if (currentRoute in listOf("chat_list")) {
                             PersistentBottomBar(
                                 selectedRoute = currentRoute ?: "chat_list",
                                 onChatsClick = {
@@ -70,9 +71,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 },
                                 onAssistantClick = {
-                                    if (currentRoute != Screen.Assistant.route) {
-                                        navController.navigate(Screen.Assistant.route)
-                                    }
+                                    // TODO: Tools button - currently does nothing
                                 }
                             )
                         }
@@ -118,8 +117,11 @@ class MainActivity : ComponentActivity() {
                             onChatClick = { conversationId ->
                                 navController.navigate("chat/$conversationId")
                             },
-                            onDesignLibraryClick = {
-                                navController.navigate(Screen.Assistant.route)
+                            onMetaAIClick = {
+                                // Navigate to Assistant tab (same as tapping AI bottom tab)
+                                navController.navigate(Screen.Assistant.route) {
+                                    launchSingleTop = true
+                                }
                             }
                         )
                     }
@@ -484,7 +486,7 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
-                    
+
                     composable(
                         route = Screen.AssistantChat.route,
                         enterTransition = {
@@ -625,13 +627,13 @@ private fun PersistentBottomBar(
                 ),
                 icon = {
                     Icon(
-                        imageVector = androidx.compose.material.icons.Icons.Outlined.AutoAwesome,
-                        contentDescription = "Assistant"
+                        imageVector = androidx.compose.material.icons.Icons.Outlined.Settings,
+                        contentDescription = "Tools"
                     )
                 },
                 label = {
                     Text(
-                        text = "Assistant",
+                        text = "Tools",
                         style = if (selectedRoute == Screen.Assistant.route) WdsTheme.typography.body3InlineLink else WdsTheme.typography.body3Emphasized
                     )
                 }
