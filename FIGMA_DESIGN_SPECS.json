@@ -1,0 +1,36 @@
+{
+  "project": "WA-SMB-MAIBA",
+  "screen": "Home Screen",
+  "file_id": "KFAiP5AJPfgkwyHwTB8g1z",
+  "design_specs": {
+    "screen_dimensions": {
+      "width": 360,
+      "height": 800,
+      "notes": "Mobile screen (Android)"
+    },
+    "screens": [
+      {
+        "name": "MAI - New user",
+        "height": 404,
+        "notes": "Home screen for new users with greeting and quick actions"
+      },
+      {
+        "name": "Frame 2147227366",
+        "height": 300,
+        "notes": "Additional content frame"
+      }
+    ],
+    "extracted_data": {
+      "status": "partial",
+      "notes": "Full component details extracted from Figma API. Now analyzing structure..."
+    }
+  },
+  "next_steps": {
+    "1": "Extract button components and their styling",
+    "2": "Extract chip components and their layout",
+    "3": "Extract card/surface styling",
+    "4": "Map colors to WDS semantic tokens",
+    "5": "Generate Kotlin code with exact dimensions"
+  }
+}
+

@@ -1,0 +1,71 @@
+---
+alwaysApply: true
+---
+# Architecture
+
+## Folder Structure
+
+```
+app/src/main/java/com/example/chatapp/
+├── wds/                        # WhatsApp Design System
+│   ├── components/             # WDS components
+│   ├── theme/                  # Color schemes, themes
+│   └── tokens/                 # Design tokens (typography, dimensions, shapes)
+│
+├── features/                   # Feature modules
+│   ├── chat/                   # Chat screen and components
+│   ├── chatlist/               # Chat list screen
+│   ├── chatinfo/               # Chat info screen
+│   └── main/                   # Main view model
+│
+├── data/                       # Data layer
+│   ├── local/                  # Room database
+│   ├── repository/             # Repository pattern
+│   └── initializer/            # Database initialization
+│
+└── di/                         # Dependency injection
+```
+
+## Data Layer Architecture
+
+The app uses a multi-layered architecture with Room database at its core:
+
+### 1. Database Layer (`data/local/`)
+- `ChatDatabase`: Main Room database with 4 entities (User, Conversation, Message, ConversationParticipant)
+- DAOs provide Flow-based reactive queries for real-time updates
+- Type converters handle complex data types (Instant, MessageType, etc.)
+- Room schemas exported to `app/schemas/` for migration tracking
+
+### 2. Repository Layer (`data/repository/`)
+- `ChatRepository`: Single source of truth for all data operations
+- Provides unified interface for DAOs
+- Handles message sending with automatic conversation updates
+
+### 3. Dependency Injection (`di/`)
+- `DatabaseModule`: Provides singleton database and DAO instances via Hilt
+- Database name: "chat_database"
+
+## UI Architecture
+
+### Features Structure (`features/`)
+- Each feature has its own package with screen, viewmodel, and components
+- Uses ViewModels with StateFlow for reactive UI updates
+- Navigation handled via Compose Navigation
+
+### Key Features
+- Real-time message status (sent, delivered, read)
+- Group and individual conversations
+- Message types: text, photo, video, audio, file, location, voice notes
+- Conversation features: pinning, muting, archiving, unread counts
+- User online status tracking
+- Message search and filtering
+
+## Database Schema
+
+The app uses Room database version 1 with these main entities:
+- `UserEntity`: User profiles with online status
+- `ConversationEntity`: Chat conversations with metadata
+- `MessageEntity`: Individual messages with various types
+- `ConversationParticipantEntity`: Links users to conversations
+
+Foreign key relationships ensure data integrity between entities.

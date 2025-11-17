@@ -1,5 +1,6 @@
 package com.example.chatapp.features.assistant
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.chatapp.R
+import com.example.chatapp.wds.components.WDSButton
+import com.example.chatapp.wds.components.WDSButtonAction
+import com.example.chatapp.wds.components.WDSButtonSize
+import com.example.chatapp.wds.components.WDSButtonVariant
+import com.example.chatapp.wds.components.WDSChip
+import com.example.chatapp.wds.components.WDSChipSize
 import com.example.chatapp.wds.theme.WdsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,111 +68,143 @@ fun AssistantScreen(
                     Spacer(modifier = Modifier.height(WdsTheme.dimensions.wdsSpacingQuad))
                 }
                 
-                // Quick Actions Card
+                // Use-cases: 6 Capabilities (Business AI, Catalog, Advertise, Orders, Analyze photo, Create image)
                 item {
-                    Surface(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = WdsTheme.dimensions.wdsSpacingDouble),
-                        shape = WdsTheme.shapes.double,
-                        color = WdsTheme.colors.colorSurfaceDefault,
-                        shadowElevation = 2.dp
+                            .padding(horizontal = 16.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(WdsTheme.dimensions.wdsSpacingDouble)
+                        // Row 1: Business AI & Catalog
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingSingle)
-                            ) {
-                                QuickActionButton(
-                                    icon = Icons.Outlined.AutoAwesome,
-                                    label = "Business AI",
-                                    iconTint = Color(0xFF10A37F),
-                                    modifier = Modifier.weight(1f),
-                                    onClick = {}
-                                )
-                                QuickActionButton(
-                                    icon = Icons.Outlined.Inventory,
-                                    label = "Catalog",
-                                    iconTint = Color(0xFF1E88E5),
-                                    modifier = Modifier.weight(1f),
-                                    onClick = {}
-                                )
-                            }
-                            
-                            Spacer(modifier = Modifier.height(WdsTheme.dimensions.wdsSpacingSingle))
-                            
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingSingle)
-                            ) {
-                                QuickActionButton(
-                                    icon = Icons.Outlined.Campaign,
-                                    label = "Advertise",
-                                    iconTint = Color(0xFF7C3AED),
-                                    modifier = Modifier.weight(1f),
-                                    onClick = onAdvertiseClick
-                                )
-                                QuickActionButton(
-                                    icon = Icons.Outlined.Receipt,
-                                    label = "Orders",
-                                    iconTint = Color(0xFFEC4899),
-                                    modifier = Modifier.weight(1f),
-                                    onClick = {}
-                                )
-                            }
+                            CapabilityCard(
+                                icon = Icons.Outlined.AutoAwesome,
+                                title = "Business AI",
+                                subtitle = "Get new ideas",
+                                modifier = Modifier.weight(1f)
+                            )
+                            CapabilityCard(
+                                icon = Icons.Outlined.Inventory,
+                                title = "Catalog",
+                                subtitle = "Get new ideas",
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        // Row 2: Advertise & Orders
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            CapabilityCard(
+                                icon = Icons.Outlined.Campaign,
+                                title = "Advertise",
+                                subtitle = "Get new ideas",
+                                modifier = Modifier.weight(1f)
+                            )
+                            CapabilityCard(
+                                icon = Icons.Outlined.Receipt,
+                                title = "Orders",
+                                subtitle = "Get new ideas",
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        // Row 3: Analyze photo & Create image
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            CapabilityCard(
+                                icon = Icons.Outlined.PhotoCamera,
+                                title = "Analyze photo",
+                                subtitle = "Get new ideas",
+                                modifier = Modifier.weight(1f)
+                            )
+                            CapabilityCard(
+                                icon = Icons.Outlined.Image,
+                                title = "Create image",
+                                subtitle = "Get new ideas",
+                                modifier = Modifier.weight(1f)
+                            )
                         }
                     }
-                    Spacer(modifier = Modifier.height(WdsTheme.dimensions.wdsSpacingDouble))
+                    Spacer(modifier = Modifier.height(23.dp))
                 }
                 
-                // Suggested Prompts
+                // Personalized null state prompts
                 item {
-                    Surface(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = WdsTheme.dimensions.wdsSpacingDouble),
-                        shape = WdsTheme.shapes.double,
-                        color = WdsTheme.colors.colorSurfaceDefault,
-                        shadowElevation = 2.dp
+                            .padding(horizontal = 16.dp)
                     ) {
-                        Column {
-                            SuggestedPromptItem(
-                                emoji = "🏷️",
-                                text = "Labels",
-                                showDivider = true,
-                                onClick = {}
+                        // Section header with "See all" link
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                "Ask for anything",
+                                style = WdsTheme.typography.body1Emphasized,
+                                color = WdsTheme.colors.colorContentDefault
                             )
-                            SuggestedPromptItem(
-                                emoji = "💬",
-                                text = "Greeting message",
-                                showDivider = true,
-                                onClick = {}
+                            Text(
+                                "See all",
+                                style = WdsTheme.typography.body2,
+                                color = WdsTheme.colors.colorAccentEmphasized,
+                                modifier = Modifier.clickable { }
                             )
-                            SuggestedPromptItem(
-                                emoji = "📤",
-                                text = "Away message",
-                                showDivider = true,
-                                onClick = {}
+                        }
+                        
+                        // Suggested personalized prompts - white cards with 16dp radius
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            PersonalizedPromptCard(
+                                emoji = "📚",
+                                text = "Create videos with AI",
+                                timestamp = "How did that workout go? Any...",
+                                isNew = true
                             )
-                            SuggestedPromptItem(
-                                emoji = "⚡",
-                                text = "Quick replies",
-                                showDivider = true,
-                                onClick = {}
+                            PersonalizedPromptCard(
+                                text = "How do I get more customers?",
+                                timestamp = "How did that workout go? Any..."
                             )
-                            SuggestedPromptItem(
-                                emoji = "👤",
-                                text = "Manage profile",
-                                showDivider = true,
-                                onClick = {}
+                            PersonalizedPromptCard(
+                                text = "How do I showcase my products?",
+                                timestamp = "How did that workout go? Any..."
                             )
-                            SuggestedPromptItem(
-                                emoji = "📱",
-                                text = "Facebook & Instagram",
-                                showDivider = false,
-                                onClick = {}
+                            PersonalizedPromptCard(
+                                text = "How can I stay organized with customer chats?",
+                                timestamp = "How did that workout go? Any..."
+                            )
+                            PersonalizedPromptCard(
+                                text = "How do I grow my business?",
+                                timestamp = "How did that workout go? Any..."
+                            )
+                            PersonalizedPromptCard(
+                                text = "How do I improve customer satisfaction?",
+                                timestamp = "How did that workout go? Any..."
+                            )
+                            PersonalizedPromptCard(
+                                text = "Help me with my homework",
+                                timestamp = "How did that workout go? Any..."
+                            )
+                            PersonalizedPromptCard(
+                                text = "Imagine me as an astronaut",
+                                timestamp = "How did that workout go? Any..."
                             )
                         }
                     }
@@ -276,41 +315,6 @@ private fun AssistantTopBar(
     )
 }
 
-@Composable
-private fun QuickActionButton(
-    icon: ImageVector,
-    label: String,
-    iconTint: Color,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Surface(
-        onClick = onClick,
-        modifier = modifier.height(56.dp),
-        shape = WdsTheme.shapes.single,
-        color = WdsTheme.colors.colorSurfaceEmphasized
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingHalf)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                tint = iconTint,
-                modifier = Modifier.size(20.dp)
-            )
-            Text(
-                text = label,
-                style = WdsTheme.typography.body2,
-                color = WdsTheme.colors.colorContentDefault
-            )
-        }
-    }
-}
 
 @Composable
 private fun AssistantBottomBar(
@@ -498,6 +502,134 @@ private fun SuggestionChip(
     }
 }
 
+@Composable
+private fun CapabilityCard(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .clip(RoundedCornerShape(8.dp))
+            .clickable { },
+        shape = RoundedCornerShape(8.dp),
+        color = WdsTheme.colors.colorSurfaceDefault,
+        border = BorderStroke(1.dp, WdsTheme.colors.colorDivider)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                tint = WdsTheme.colors.colorContentDefault,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = title,
+                style = WdsTheme.typography.body2,
+                color = WdsTheme.colors.colorContentDefault,
+                maxLines = 1
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = subtitle,
+                style = WdsTheme.typography.body3,
+                color = WdsTheme.colors.colorContentDeemphasized,
+                maxLines = 1
+            )
+        }
+    }
+}
+
+@Composable
+private fun PersonalizedPromptCard(
+    text: String,
+    timestamp: String,
+    emoji: String? = null,
+    isNew: Boolean = false,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .clickable { },
+        shape = RoundedCornerShape(16.dp),
+        color = Color.White,
+        shadowElevation = 2.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // Emoji as icon (optional)
+            if (emoji != null) {
+                Text(
+                    text = emoji,
+                    style = WdsTheme.typography.headline2,
+                    modifier = Modifier.size(40.dp)
+                )
+            }
+            
+            // Text content
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = text,
+                        style = WdsTheme.typography.body2,
+                        color = WdsTheme.colors.colorContentDefault,
+                        maxLines = 2,
+                        modifier = Modifier.weight(1f)
+                    )
+                    if (isNew) {
+                        Surface(
+                            shape = RoundedCornerShape(4.dp),
+                            color = WdsTheme.colors.colorAccentDeemphasized
+                        ) {
+                            Text(
+                                text = "New",
+                                style = WdsTheme.typography.body3,
+                                color = WdsTheme.colors.colorAccentEmphasized,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                }
+                Text(
+                    text = timestamp,
+                    style = WdsTheme.typography.body3,
+                    color = WdsTheme.colors.colorContentDeemphasized,
+                    maxLines = 1
+                )
+            }
+            
+            // Forward arrow
+            Icon(
+                imageVector = Icons.Outlined.ChevronRight,
+                contentDescription = null,
+                tint = WdsTheme.colors.colorContentDeemphasized,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChatInputBar() {
@@ -571,47 +703,3 @@ private fun ChatInputBar() {
     }
 }
 
-@Composable
-private fun SuggestedPromptItem(
-    emoji: String,
-    text: String,
-    showDivider: Boolean,
-    onClick: () -> Unit
-) {
-    Column {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onClick)
-                .padding(
-                    horizontal = WdsTheme.dimensions.wdsSpacingDouble,
-                    vertical = WdsTheme.dimensions.wdsSpacingSinglePlus
-                ),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingSingle)
-            ) {
-                Text(
-                    text = emoji,
-                    style = WdsTheme.typography.headline2,
-                    modifier = Modifier.size(40.dp),
-                )
-                Text(
-                    text = text,
-                    style = WdsTheme.typography.body1,
-                    color = WdsTheme.colors.colorContentDefault
-                )
-            }
-        }
-
-        if (showDivider) {
-            Divider(
-                modifier = Modifier.padding(horizontal = WdsTheme.dimensions.wdsSpacingDouble),
-                color = WdsTheme.colors.colorDivider,
-                thickness = WdsTheme.dimensions.wdsBorderWidthThin
-            )
-        }
-    }
-}
