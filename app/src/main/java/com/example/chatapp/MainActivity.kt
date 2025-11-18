@@ -118,8 +118,8 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate("chat/$conversationId")
                             },
                             onMetaAIClick = {
-                                // Navigate to Assistant tab (same as tapping AI bottom tab)
-                                navController.navigate(Screen.Assistant.route) {
+                                // Navigate directly to Meta AI chat thread
+                                navController.navigate(Screen.AssistantChat.route) {
                                     launchSingleTop = true
                                 }
                             }
@@ -482,6 +482,9 @@ class MainActivity : ComponentActivity() {
                         AssistantScreen(
                             onNavigateBack = { navController.popBackStack() },
                             onAdvertiseClick = {
+                                navController.navigate(Screen.AssistantChat.route)
+                            },
+                            onMetaAIClick = {
                                 navController.navigate(Screen.AssistantChat.route)
                             }
                         )

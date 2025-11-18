@@ -33,13 +33,28 @@ import com.example.chatapp.wds.theme.WdsTheme
 @Composable
 fun AssistantScreen(
     onNavigateBack: () -> Unit = {},
-    onAdvertiseClick: () -> Unit = {}
+    onAdvertiseClick: () -> Unit = {},
+    onMetaAIClick: () -> Unit = {}
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = WdsTheme.colors.colorChatBackgroundWallpaper,
         topBar = {
             AssistantTopBar(onNavigateBack = onNavigateBack)
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    onMetaAIClick()
+                },
+                containerColor = Color(0xFF0084FF),
+                contentColor = Color.White
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.AutoAwesome,
+                    contentDescription = "Meta AI Chat"
+                )
+            }
         }
     ) { paddingValues ->
         Box(
