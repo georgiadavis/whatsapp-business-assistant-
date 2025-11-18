@@ -92,3 +92,6 @@ lint/tmp/
 
 # Backup files
 *.backup
+
+# API Keys and Secrets
+app/src/main/res/values/secrets.xml

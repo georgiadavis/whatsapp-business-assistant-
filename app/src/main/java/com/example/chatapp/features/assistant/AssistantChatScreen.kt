@@ -19,17 +19,20 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chatapp.R
+import com.example.chatapp.data.remote.ChatMessage
 import com.example.chatapp.wds.theme.WdsTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import androidx.compose.ui.graphics.drawscope.Stroke
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AssistantChatScreen(
-    onNavigateBack: () -> Unit = {}
+    onNavigateBack: () -> Unit = {},
+    viewModel: AssistantChatViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
@@ -39,25 +42,14 @@ fun AssistantChatScreen(
     val imeHeight = with(density) { imeInsets.getBottom(this).toDp() }
     val isKeyboardOpen = imeHeight > 0.dp
 
-    // Sample messages for Meta AI
-    val messages = remember {
-        listOf(
-            AssistantMessage(
-                text = "Hi Gonzales Plumbing, you currently have three broadcasts and two CTWA ads running. Do you want to see how they are performing or something else?",
-                timestamp = "12:30"
-            )
-        )
-    }
-
-    // Scroll to bottom on load
-    LaunchedEffect(messages.size) {
-        if (messages.isNotEmpty()) {
-            delay(50)
-            listState.scrollToItem(messages.size - 1)
+    // Scroll to bottom when messages change
+    LaunchedEffect(uiState.messages.size) {
+        if (uiState.messages.isNotEmpty()) {
+            delay(100)
+            listState.animateScrollToItem(uiState.messages.size - 1)
         }
     }
 
-    // Main content
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -70,7 +62,16 @@ fun AssistantChatScreen(
                 AssistantChatTopBar(onNavigateBack = onNavigateBack)
             },
             bottomBar = {
-                AssistantChatComposer()
+                AssistantChatComposer(
+                    userInput = uiState.userInput,
+                    isLoading = uiState.isLoading,
+                    onMessageSend = { message ->
+                        viewModel.sendMessage(message)
+                    },
+                    onInputChange = { input ->
+                        viewModel.updateUserInput(input)
+                    }
+                )
             }
         ) { paddingValues ->
             Box(
@@ -90,59 +91,129 @@ fun AssistantChatScreen(
                     verticalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingDouble),
                     reverseLayout = true
                 ) {
-                    // Suggestion chips first (reversed layout)
-                    item {
-                        AssistantSuggestionChip(
-                            text = "Create visuals for my ads",
-                            onClick = {}
-                        )
-                    }
-
-                    item {
-                        AssistantSuggestionChip(
-                            text = "Help me create a new broadcast",
-                            onClick = {}
-                        )
-                    }
-
-                    item {
-                        AssistantSuggestionChip(
-                            text = "Get insights on my ads performance",
-                            onClick = {}
-                        )
-                    }
-
-                    // AI message
-                    item {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
-                            horizontalArrangement = Arrangement.Start
-                        ) {
-                            Surface(
-                                shape = RoundedCornerShape(
-                                    topStart = 12.dp,
-                                    topEnd = 12.dp,
-                                    bottomEnd = 12.dp,
-                                    bottomStart = 4.dp
-                                ),
-                                color = WdsTheme.colors.colorSurfaceDefault,
-                                modifier = Modifier.widthIn(max = 300.dp)
+                    // Loading indicator
+                    if (uiState.isLoading) {
+                        item {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
+                                horizontalArrangement = Arrangement.Start
                             ) {
-                                Column(
-                                    modifier = Modifier.padding(WdsTheme.dimensions.wdsSpacingSingle)
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(24.dp),
+                                    strokeWidth = 2.dp,
+                                    color = WdsTheme.colors.colorContentDeemphasized
+                                )
+                            }
+                        }
+                    }
+
+                    // Error message
+                    if (uiState.error != null) {
+                        item {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
+                                horizontalArrangement = Arrangement.Start
+                            ) {
+                                Surface(
+                                    shape = RoundedCornerShape(WdsTheme.shapes.singlePlus),
+                                    color = WdsTheme.colors.colorNegative.copy(alpha = 0.1f),
+                                    modifier = Modifier.widthIn(max = 260.dp)
                                 ) {
                                     Text(
-                                        text = messages[0].text,
-                                        style = WdsTheme.typography.body1,
-                                        color = WdsTheme.colors.colorContentDefault
+                                        text = uiState.error ?: "Error",
+                                        style = WdsTheme.typography.body2,
+                                        color = WdsTheme.colors.colorNegative,
+                                        modifier = Modifier.padding(WdsTheme.dimensions.wdsSpacingSingle)
                                     )
-                                    Spacer(modifier = Modifier.height(4.dp))
+                                }
+                            }
+                        }
+                    }
+
+                    // Messages
+                    items(uiState.messages.size) { index ->
+                        val message = uiState.messages[index]
+                        
+                        if (message.role == "user") {
+                            // User message (right-aligned, sent style)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .widthIn(max = 260.dp)
+                                        .clip(WdsTheme.shapes.singlePlus)
+                                        .background(WdsTheme.colors.colorBubbleSurfaceOutgoing)
+                                ) {
                                     Text(
-                                        text = messages[0].timestamp,
-                                        style = WdsTheme.typography.body3,
-                                        color = WdsTheme.colors.colorContentDeemphasized
+                                        text = message.content,
+                                        style = WdsTheme.typography.chatBody1,
+                                        color = WdsTheme.colors.colorContentDefault,
+                                        modifier = Modifier.padding(
+                                            horizontal = WdsTheme.dimensions.wdsSpacingSingle,
+                                            vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
+                                        )
+                                    )
+                                }
+                            }
+                        } else {
+                            // AI message (left-aligned, received style)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
+                                horizontalArrangement = Arrangement.Start
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .widthIn(max = 260.dp)
+                                        .clip(WdsTheme.shapes.singlePlus)
+                                        .background(WdsTheme.colors.colorBubbleSurfaceIncoming)
+                                ) {
+                                    Text(
+                                        text = message.content,
+                                        style = WdsTheme.typography.chatBody1,
+                                        color = WdsTheme.colors.colorContentDefault,
+                                        modifier = Modifier.padding(
+                                            horizontal = WdsTheme.dimensions.wdsSpacingSingle,
+                                            vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    // Initial greeting
+                    if (uiState.messages.isEmpty() && !uiState.isLoading) {
+                        item {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
+                                horizontalArrangement = Arrangement.Start
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .widthIn(max = 260.dp)
+                                        .clip(WdsTheme.shapes.singlePlus)
+                                        .background(WdsTheme.colors.colorBubbleSurfaceIncoming)
+                                ) {
+                                    Text(
+                                        text = "Hi! I'm Meta AI, your WhatsApp Business assistant. How can I help you today?",
+                                        style = WdsTheme.typography.chatBody1,
+                                        color = WdsTheme.colors.colorContentDefault,
+                                        modifier = Modifier.padding(
+                                            horizontal = WdsTheme.dimensions.wdsSpacingSingle,
+                                            vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
+                                        )
                                     )
                                 }
                             }
@@ -165,7 +236,6 @@ private fun AssistantChatTopBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingSingle)
             ) {
-                // Meta AI gradient ring icon
                 Box(
                     modifier = Modifier.size(40.dp),
                     contentAlignment = Alignment.Center
@@ -235,12 +305,15 @@ private fun AssistantChatTopBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AssistantChatComposer() {
+private fun AssistantChatComposer(
+    userInput: String,
+    isLoading: Boolean,
+    onMessageSend: (String) -> Unit,
+    onInputChange: (String) -> Unit
+) {
     val colors = WdsTheme.colors
     val dimensions = WdsTheme.dimensions
     val shapes = WdsTheme.shapes
-
-    var composerText by remember { mutableStateOf("") }
 
     Surface(
         modifier = Modifier
@@ -254,29 +327,24 @@ private fun AssistantChatComposer() {
                 .padding(dimensions.wdsSpacingHalf),
             verticalAlignment = Alignment.Bottom
         ) {
-            // Message input field with same styling as ChatComposer
             Surface(
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = dimensions.wdsSpacingHalf),
-                shape = shapes.triple, // 24dp border radius
+                shape = shapes.triple,
                 color = colors.colorBubbleSurfaceIncoming,
                 shadowElevation = dimensions.wdsElevationSubtle
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(
-                            end = dimensions.wdsSpacingHalf
-                        ),
+                        .padding(end = dimensions.wdsSpacingHalf),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Text field
                     TextField(
-                        value = composerText,
-                        onValueChange = { composerText = it },
-                        modifier = Modifier
-                            .weight(1f),
+                        value = userInput,
+                        onValueChange = onInputChange,
+                        modifier = Modifier.weight(1f),
                         placeholder = {
                             Text(
                                 text = "Ask anything",
@@ -317,71 +385,40 @@ private fun AssistantChatComposer() {
                                     )
                                 }
                             }
-                        }
+                        },
+                        enabled = !isLoading
                     )
                 }
             }
 
-            // Mic/Send button
             FloatingActionButton(
-                onClick = {},
+                onClick = {
+                    if (userInput.isNotBlank()) {
+                        onMessageSend(userInput)
+                    }
+                },
                 modifier = Modifier.size(dimensions.wdsTouchTargetComfortable),
                 containerColor = colors.colorAccent,
                 contentColor = Color.White,
                 shape = CircleShape,
                 elevation = FloatingActionButtonDefaults.elevation(
                     defaultElevation = dimensions.wdsElevationSubtle
-                )
+                ),
+                enabled = !isLoading && userInput.isNotBlank()
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Mic,
-                    contentDescription = "Voice"
-                )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        strokeWidth = 2.dp,
+                        color = Color.White
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Outlined.Send,
+                        contentDescription = "Send"
+                    )
+                }
             }
         }
     }
 }
-
-@Composable
-private fun AssistantSuggestionChip(
-    text: String,
-    onClick: () -> Unit
-) {
-    Surface(
-        onClick = onClick,
-        shape = WdsTheme.shapes.double,
-        color = WdsTheme.colors.colorSurfaceDefault,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(
-                    horizontal = WdsTheme.dimensions.wdsSpacingDouble,
-                    vertical = WdsTheme.dimensions.wdsSpacingSinglePlus
-                ),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = text,
-                style = WdsTheme.typography.body1,
-                color = WdsTheme.colors.colorContentDefault,
-                modifier = Modifier.weight(1f),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-            Icon(
-                imageVector = Icons.Outlined.ArrowForward,
-                contentDescription = null,
-                tint = WdsTheme.colors.colorContentDeemphasized,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-    }
-}
-
-// Data class for messages
-private data class AssistantMessage(
-    val text: String,
-    val timestamp: String
-)
