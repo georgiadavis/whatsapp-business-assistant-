@@ -11,11 +11,13 @@ data class ChatCompletionRequest(
     @SerialName("messages")
     val messages: List<ChatMessage>,
     @SerialName("temperature")
-    val temperature: Double = 0.7,
-    @SerialName("max_tokens")
-    val maxTokens: Int = 1024,
+    val temperature: Double? = null,
+    @SerialName("max_completion_tokens")
+    val maxTokens: Int? = null,
     @SerialName("top_p")
-    val topP: Double = 0.9
+    val topP: Double? = null,
+    @SerialName("stream")
+    val stream: Boolean = false
 )
 
 @Serializable
@@ -30,27 +32,29 @@ data class ChatMessage(
 @Serializable
 data class ChatCompletionResponse(
     @SerialName("id")
-    val id: String,
-    @SerialName("object")
-    val `object`: String,
-    @SerialName("created")
-    val created: Long,
-    @SerialName("model")
-    val model: String,
-    @SerialName("choices")
-    val choices: List<Choice>,
-    @SerialName("usage")
-    val usage: Usage? = null
+    val id: String? = null,
+    @SerialName("completion_message")
+    val completionMessage: CompletionMessage? = null,
+    @SerialName("error")
+    val error: ErrorDetail? = null
 )
 
 @Serializable
-data class Choice(
-    @SerialName("index")
-    val index: Int,
-    @SerialName("message")
-    val message: ChatMessage,
-    @SerialName("finish_reason")
-    val finishReason: String? = null
+data class CompletionMessage(
+    @SerialName("role")
+    val role: String,
+    @SerialName("stop_reason")
+    val stopReason: String? = null,
+    @SerialName("content")
+    val content: MessageContent
+)
+
+@Serializable
+data class MessageContent(
+    @SerialName("type")
+    val type: String,
+    @SerialName("text")
+    val text: String
 )
 
 @Serializable
@@ -79,4 +83,3 @@ data class ErrorDetail(
     @SerialName("code")
     val code: String? = null
 )
-

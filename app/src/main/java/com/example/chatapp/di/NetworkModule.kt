@@ -16,13 +16,32 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Qualifier
 import javax.inject.Singleton
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class LlamaApiKey
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class LlamaApiBaseUrl
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val LLAMA_API_BASE_URL = "https://api.llama.com/"
+    @Provides
+    @Singleton
+    @LlamaApiBaseUrl
+    fun provideLlamaApiBaseUrl(@ApplicationContext context: Context): String {
+        return try {
+            context.getString(R.string.llama_api_base_url)
+        } catch (e: Exception) {
+            android.util.Log.e("NetworkModule", "Failed to load API base URL from secrets.xml", e)
+            "https://api.llama.com/"
+        }
+    }
 
     @Provides
     @Singleton
@@ -50,9 +69,10 @@ object NetworkModule {
     @Singleton
     fun provideLlamaApiService(
         okHttpClient: OkHttpClient,
-        json: Json
+        json: Json,
+        @LlamaApiBaseUrl baseUrl: String
     ): LlamaApiService = Retrofit.Builder()
-        .baseUrl(LLAMA_API_BASE_URL)
+        .baseUrl(baseUrl)
         .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
@@ -60,6 +80,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @LlamaApiKey
     fun provideLlamaApiKey(@ApplicationContext context: Context): String {
         // Get API key from secrets.xml
         return try {
@@ -74,7 +95,7 @@ object NetworkModule {
     @Singleton
     fun provideLlamaRepository(
         llamaApiService: LlamaApiService,
-        apiKey: String
+        @LlamaApiKey apiKey: String
     ): LlamaRepository = LlamaRepository(llamaApiService, apiKey)
 }
 

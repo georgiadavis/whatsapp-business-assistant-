@@ -26,12 +26,6 @@ class AssistantChatViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState.asStateFlow()
 
-    private val systemPrompt = """
-        You are Meta AI, a helpful assistant for WhatsApp Business. 
-        You help business owners with WhatsApp Business features, marketing advice, and customer support strategies.
-        Provide clear, concise, and actionable responses.
-    """.trimIndent()
-
     fun sendMessage(userMessage: String) {
         if (userMessage.isBlank()) return
 
@@ -77,4 +71,3 @@ class AssistantChatViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(error = null)
     }
 }
-

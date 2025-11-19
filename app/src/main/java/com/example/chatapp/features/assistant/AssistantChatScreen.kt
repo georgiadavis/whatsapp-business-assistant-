@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.*
@@ -14,10 +15,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chatapp.R
@@ -88,109 +97,8 @@ fun AssistantChatScreen(
                         top = WdsTheme.dimensions.wdsSpacingDouble,
                         bottom = WdsTheme.dimensions.wdsSpacingDouble
                     ),
-                    verticalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingDouble),
-                    reverseLayout = true
+                    verticalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingDouble)
                 ) {
-                    // Loading indicator
-                    if (uiState.isLoading) {
-                        item {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
-                                horizontalArrangement = Arrangement.Start
-                            ) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(24.dp),
-                                    strokeWidth = 2.dp,
-                                    color = WdsTheme.colors.colorContentDeemphasized
-                                )
-                            }
-                        }
-                    }
-
-                    // Error message
-                    if (uiState.error != null) {
-                        item {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
-                                horizontalArrangement = Arrangement.Start
-                            ) {
-                                Surface(
-                                    shape = RoundedCornerShape(WdsTheme.shapes.singlePlus),
-                                    color = WdsTheme.colors.colorNegative.copy(alpha = 0.1f),
-                                    modifier = Modifier.widthIn(max = 260.dp)
-                                ) {
-                                    Text(
-                                        text = uiState.error ?: "Error",
-                                        style = WdsTheme.typography.body2,
-                                        color = WdsTheme.colors.colorNegative,
-                                        modifier = Modifier.padding(WdsTheme.dimensions.wdsSpacingSingle)
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    // Messages
-                    items(uiState.messages.size) { index ->
-                        val message = uiState.messages[index]
-                        
-                        if (message.role == "user") {
-                            // User message (right-aligned, sent style)
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
-                                horizontalArrangement = Arrangement.End
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .widthIn(max = 260.dp)
-                                        .clip(WdsTheme.shapes.singlePlus)
-                                        .background(WdsTheme.colors.colorBubbleSurfaceOutgoing)
-                                ) {
-                                    Text(
-                                        text = message.content,
-                                        style = WdsTheme.typography.chatBody1,
-                                        color = WdsTheme.colors.colorContentDefault,
-                                        modifier = Modifier.padding(
-                                            horizontal = WdsTheme.dimensions.wdsSpacingSingle,
-                                            vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
-                                        )
-                                    )
-                                }
-                            }
-                        } else {
-                            // AI message (left-aligned, received style)
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
-                                horizontalArrangement = Arrangement.Start
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .widthIn(max = 260.dp)
-                                        .clip(WdsTheme.shapes.singlePlus)
-                                        .background(WdsTheme.colors.colorBubbleSurfaceIncoming)
-                                ) {
-                                    Text(
-                                        text = message.content,
-                                        style = WdsTheme.typography.chatBody1,
-                                        color = WdsTheme.colors.colorContentDefault,
-                                        modifier = Modifier.padding(
-                                            horizontal = WdsTheme.dimensions.wdsSpacingSingle,
-                                            vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-
                     // Initial greeting
                     if (uiState.messages.isEmpty() && !uiState.isLoading) {
                         item {
@@ -219,10 +127,206 @@ fun AssistantChatScreen(
                             }
                         }
                     }
+
+                    // Messages
+                    items(uiState.messages.size) { index ->
+                        val message = uiState.messages[index]
+
+                        if (message.role == "user") {
+                            // User message (right-aligned, sent style)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingDouble, vertical = WdsTheme.dimensions.wdsSpacingQuarter),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .widthIn(max = 260.dp)
+                                        .shadow(
+                                            elevation = WdsTheme.dimensions.wdsElevationSubtle,
+                                            spotColor = WdsTheme.colors.colorBubbleSurfaceOverlay,
+                                            ambientColor = WdsTheme.colors.colorBubbleSurfaceOverlay,
+                                            shape = WdsTheme.shapes.singlePlus
+                                        )
+                                        .clip(WdsTheme.shapes.singlePlus)
+                                        .background(WdsTheme.colors.colorBubbleSurfaceOutgoing)
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(
+                                            horizontal = WdsTheme.dimensions.wdsSpacingSingle,
+                                            vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
+                                        ),
+                                        horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingQuarter),
+                                        verticalAlignment = Alignment.Bottom
+                                    ) {
+                                        Text(
+                                            text = message.content,
+                                            style = WdsTheme.typography.chatBody1,
+                                            color = WdsTheme.colors.colorContentDefault,
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                        Icon(
+                                            imageVector = Icons.Outlined.DoneAll,
+                                            contentDescription = "Message sent",
+                                            modifier = Modifier.size(16.dp),
+                                            tint = WdsTheme.colors.colorContentRead
+                                        )
+                                    }
+                                }
+                            }
+                        } else {
+                            // AI message (left-aligned, received style)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
+                                horizontalArrangement = Arrangement.Start
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .widthIn(max = 260.dp)
+                                        .clip(WdsTheme.shapes.singlePlus)
+                                        .background(WdsTheme.colors.colorBubbleSurfaceIncoming)
+                                ) {
+                                    FormattedText(
+                                        text = message.content,
+                                        style = WdsTheme.typography.chatBody1,
+                                        color = WdsTheme.colors.colorContentDefault,
+                                        modifier = Modifier.padding(
+                                            horizontal = WdsTheme.dimensions.wdsSpacingSingle,
+                                            vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    // Loading indicator
+                    if (uiState.isLoading) {
+                        item {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
+                                horizontalArrangement = Arrangement.Start
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(24.dp),
+                                    strokeWidth = 2.dp,
+                                    color = WdsTheme.colors.colorContentDeemphasized
+                                )
+                            }
+                        }
+                    }
+
+                    // Error message
+                    if (uiState.error != null) {
+                        item {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
+                                horizontalArrangement = Arrangement.Start
+                            ) {
+                                Surface(
+                                    shape = WdsTheme.shapes.singlePlus,
+                                    color = WdsTheme.colors.colorNegative.copy(alpha = 0.1f),
+                                    modifier = Modifier.widthIn(max = 260.dp)
+                                ) {
+                                    Text(
+                                        text = uiState.error ?: "Error",
+                                        style = WdsTheme.typography.body2,
+                                        color = WdsTheme.colors.colorNegative,
+                                        modifier = Modifier.padding(WdsTheme.dimensions.wdsSpacingSingle)
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun FormattedText(
+    text: String,
+    style: TextStyle,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    val uriHandler = LocalUriHandler.current
+    val annotatedString = buildAnnotatedString {
+        var currentIndex = 0
+        val boldRegex = """\*\*(.*?)\*\*""".toRegex()
+        // Updated URL regex to exclude trailing punctuation
+        val urlRegex = """https?://[^\s)]+(?=[.!?,;:]?(?:\s|$))""".toRegex()
+
+        // Find all bold text matches
+        val boldMatches = boldRegex.findAll(text).toList()
+        // Find all URL matches
+        val urlMatches = urlRegex.findAll(text).toList()
+
+        // Combine and sort all matches by start index
+        val allMatches = (boldMatches + urlMatches).sortedBy { it.range.first }
+
+        for (match in allMatches) {
+            // Add text before this match
+            if (currentIndex < match.range.first) {
+                append(text.substring(currentIndex, match.range.first))
+            }
+
+            when {
+                match in boldMatches -> {
+                    // Bold text
+                    val boldText = match.groupValues[1]
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append(boldText)
+                    }
+                }
+                match in urlMatches -> {
+                    // Clickable URL - remove any trailing punctuation
+                    var url = match.value
+                    // Remove trailing punctuation from the URL
+                    while (url.isNotEmpty() && url.last() in ".!?,;:") {
+                        url = url.dropLast(1)
+                    }
+                    pushStringAnnotation(tag = "URL", annotation = url)
+                    withStyle(
+                        style = SpanStyle(
+                            color = WdsTheme.colors.colorAccent,
+                            textDecoration = TextDecoration.Underline
+                        )
+                    ) {
+                        append(url)
+                    }
+                    pop()
+                }
+            }
+
+            currentIndex = match.range.last + 1
+        }
+
+        // Add remaining text
+        if (currentIndex < text.length) {
+            append(text.substring(currentIndex))
+        }
+    }
+
+    ClickableText(
+        text = annotatedString,
+        style = style.copy(color = color),
+        modifier = modifier,
+        onClick = { offset ->
+            annotatedString.getStringAnnotations(tag = "URL", start = offset, end = offset)
+                .firstOrNull()?.let { annotation ->
+                    uriHandler.openUri(annotation.item)
+                }
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -368,21 +472,24 @@ private fun AssistantChatComposer(
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(dimensions.wdsSpacingHalf)
                             ) {
-                                IconButton(onClick = {}) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.AttachFile,
-                                        contentDescription = "Attach",
-                                        tint = colors.colorContentDeemphasized,
-                                        modifier = Modifier.size(dimensions.wdsIconSizeMedium)
-                                    )
-                                }
-                                IconButton(onClick = {}) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.PhotoCamera,
-                                        contentDescription = "Camera",
-                                        tint = colors.colorContentDeemphasized,
-                                        modifier = Modifier.size(dimensions.wdsIconSizeMedium)
-                                    )
+                                // Show attachment & camera only when input is empty
+                                if (userInput.isEmpty()) {
+                                    IconButton(onClick = {}) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.AttachFile,
+                                            contentDescription = "Attach",
+                                            tint = colors.colorContentDeemphasized,
+                                            modifier = Modifier.size(dimensions.wdsIconSizeMedium)
+                                        )
+                                    }
+                                    IconButton(onClick = {}) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.PhotoCamera,
+                                            contentDescription = "Camera",
+                                            tint = colors.colorContentDeemphasized,
+                                            modifier = Modifier.size(dimensions.wdsIconSizeMedium)
+                                        )
+                                    }
                                 }
                             }
                         },
@@ -391,9 +498,10 @@ private fun AssistantChatComposer(
                 }
             }
 
+            // Button changes from Mic to Send based on input
             FloatingActionButton(
                 onClick = {
-                    if (userInput.isNotBlank()) {
+                    if (userInput.isNotBlank() && !isLoading) {
                         onMessageSend(userInput)
                     }
                 },
@@ -403,20 +511,31 @@ private fun AssistantChatComposer(
                 shape = CircleShape,
                 elevation = FloatingActionButtonDefaults.elevation(
                     defaultElevation = dimensions.wdsElevationSubtle
-                ),
-                enabled = !isLoading && userInput.isNotBlank()
+                )
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(20.dp),
-                        strokeWidth = 2.dp,
-                        color = Color.White
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Outlined.Send,
-                        contentDescription = "Send"
-                    )
+                when {
+                    isLoading -> {
+                        // Loading spinner
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp,
+                            color = Color.White
+                        )
+                    }
+                    userInput.isNotEmpty() -> {
+                        // Send button when user is typing
+                        Icon(
+                            imageVector = Icons.Outlined.Send,
+                            contentDescription = "Send message"
+                        )
+                    }
+                    else -> {
+                        // Mic button when input is empty
+                        Icon(
+                            imageVector = Icons.Outlined.Mic,
+                            contentDescription = "Record voice message"
+                        )
+                    }
                 }
             }
         }
