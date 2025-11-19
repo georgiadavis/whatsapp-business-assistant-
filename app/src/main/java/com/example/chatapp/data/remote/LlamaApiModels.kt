@@ -25,7 +25,21 @@ data class ChatMessage(
     @SerialName("role")
     val role: String, // "user", "assistant", "system"
     @SerialName("content")
-    val content: String
+    val content: String,
+    @SerialName("timestamp")
+    val timestamp: String = "",
+    @SerialName("attachments")
+    val attachments: List<LinkAttachment> = emptyList()
+)
+
+@Serializable
+data class LinkAttachment(
+    @SerialName("url")
+    val url: String,
+    @SerialName("title")
+    val title: String,
+    @SerialName("domain")
+    val domain: String = "faq.whatsapp.com"
 )
 
 // Response Models

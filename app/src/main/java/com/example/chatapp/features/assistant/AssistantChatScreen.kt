@@ -1,8 +1,12 @@
 package com.example.chatapp.features.assistant
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chatapp.R
 import com.example.chatapp.data.remote.ChatMessage
+import com.example.chatapp.data.remote.LinkAttachment
 import com.example.chatapp.wds.theme.WdsTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -99,36 +104,7 @@ fun AssistantChatScreen(
                     ),
                     verticalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingDouble)
                 ) {
-                    // Initial greeting
-                    if (uiState.messages.isEmpty() && !uiState.isLoading) {
-                        item {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
-                                horizontalArrangement = Arrangement.Start
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .widthIn(max = 260.dp)
-                                        .clip(WdsTheme.shapes.singlePlus)
-                                        .background(WdsTheme.colors.colorBubbleSurfaceIncoming)
-                                ) {
-                                    Text(
-                                        text = "Hi! I'm Meta AI, your WhatsApp Business assistant. How can I help you today?",
-                                        style = WdsTheme.typography.chatBody1,
-                                        color = WdsTheme.colors.colorContentDefault,
-                                        modifier = Modifier.padding(
-                                            horizontal = WdsTheme.dimensions.wdsSpacingSingle,
-                                            vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    // Messages
+                    // Messages (including greeting if messages list is not empty)
                     items(uiState.messages.size) { index ->
                         val message = uiState.messages[index]
 
@@ -142,7 +118,6 @@ fun AssistantChatScreen(
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .widthIn(max = 260.dp)
                                         .shadow(
                                             elevation = WdsTheme.dimensions.wdsElevationSubtle,
                                             spotColor = WdsTheme.colors.colorBubbleSurfaceOverlay,
@@ -152,52 +127,158 @@ fun AssistantChatScreen(
                                         .clip(WdsTheme.shapes.singlePlus)
                                         .background(WdsTheme.colors.colorBubbleSurfaceOutgoing)
                                 ) {
-                                    Row(
-                                        modifier = Modifier.padding(
-                                            horizontal = WdsTheme.dimensions.wdsSpacingSingle,
-                                            vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
-                                        ),
-                                        horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingQuarter),
-                                        verticalAlignment = Alignment.Bottom
-                                    ) {
-                                        Text(
-                                            text = message.content,
-                                            style = WdsTheme.typography.chatBody1,
-                                            color = WdsTheme.colors.colorContentDefault,
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                        Icon(
-                                            imageVector = Icons.Outlined.DoneAll,
-                                            contentDescription = "Message sent",
-                                            modifier = Modifier.size(16.dp),
-                                            tint = WdsTheme.colors.colorContentRead
-                                        )
+                                    if (message.content.length < 20) {
+                                        // Short messages - inline timestamp
+                                        Row(
+                                            modifier = Modifier.padding(
+                                                horizontal = WdsTheme.dimensions.wdsSpacingSingle,
+                                                vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
+                                            ),
+                                            verticalAlignment = Alignment.Bottom,
+                                            horizontalArrangement = Arrangement.Start
+                                        ) {
+                                            Text(
+                                                text = message.content,
+                                                style = WdsTheme.typography.chatBody1,
+                                                color = WdsTheme.colors.colorContentDefault
+                                            )
+                                            Spacer(modifier = Modifier.width(WdsTheme.dimensions.wdsSpacingSingle))
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(
+                                                    text = message.timestamp,
+                                                    style = WdsTheme.typography.chatBody3,
+                                                    color = WdsTheme.colors.colorBubbleContentDeemphasized
+                                                )
+                                                Spacer(modifier = Modifier.width(3.dp))
+                                                Icon(
+                                                    imageVector = Icons.Outlined.DoneAll,
+                                                    contentDescription = "Message sent",
+                                                    modifier = Modifier.size(16.dp),
+                                                    tint = WdsTheme.colors.colorContentRead
+                                                )
+                                            }
+                                        }
+                                    } else {
+                                        // Longer messages - timestamp below
+                                        Column(
+                                            modifier = Modifier.padding(
+                                                horizontal = WdsTheme.dimensions.wdsSpacingSingle,
+                                                vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
+                                            )
+                                        ) {
+                                            Text(
+                                                text = message.content,
+                                                style = WdsTheme.typography.chatBody1,
+                                                color = WdsTheme.colors.colorContentDefault
+                                            )
+                                            Row(
+                                                modifier = Modifier
+                                                    .align(Alignment.End)
+                                                    .padding(top = WdsTheme.dimensions.wdsSpacingQuarter),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(
+                                                    text = message.timestamp,
+                                                    style = WdsTheme.typography.chatBody3,
+                                                    color = WdsTheme.colors.colorBubbleContentDeemphasized
+                                                )
+                                                Spacer(modifier = Modifier.width(3.dp))
+                                                Icon(
+                                                    imageVector = Icons.Outlined.DoneAll,
+                                                    contentDescription = "Message sent",
+                                                    modifier = Modifier.size(16.dp),
+                                                    tint = WdsTheme.colors.colorContentRead
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                             }
                         } else {
                             // AI message (left-aligned, received style)
-                            Row(
+                            val currentUriHandler = LocalUriHandler.current
+
+                            Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
-                                horizontalArrangement = Arrangement.Start
+                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle, vertical = WdsTheme.dimensions.wdsSpacingQuarter)
                             ) {
-                                Box(
-                                    modifier = Modifier
-                                        .widthIn(max = 260.dp)
-                                        .clip(WdsTheme.shapes.singlePlus)
-                                        .background(WdsTheme.colors.colorBubbleSurfaceIncoming)
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Start
                                 ) {
-                                    FormattedText(
-                                        text = message.content,
-                                        style = WdsTheme.typography.chatBody1,
-                                        color = WdsTheme.colors.colorContentDefault,
-                                        modifier = Modifier.padding(
-                                            horizontal = WdsTheme.dimensions.wdsSpacingSingle,
-                                            vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
-                                        )
-                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(WdsTheme.shapes.singlePlus)
+                                            .background(WdsTheme.colors.colorBubbleSurfaceIncoming)
+                                    ) {
+                                        if (message.content.length < 20) {
+                                            // Short messages - inline timestamp
+                                            Row(
+                                                modifier = Modifier.padding(
+                                                    horizontal = WdsTheme.dimensions.wdsSpacingSingle,
+                                                    vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
+                                                ),
+                                                verticalAlignment = Alignment.Bottom,
+                                                horizontalArrangement = Arrangement.Start
+                                            ) {
+                                                FormattedText(
+                                                    text = message.content,
+                                                    style = WdsTheme.typography.chatBody1,
+                                                    color = WdsTheme.colors.colorContentDefault,
+                                                    modifier = Modifier
+                                                )
+                                                Spacer(modifier = Modifier.width(WdsTheme.dimensions.wdsSpacingSingle))
+                                                Text(
+                                                    text = message.timestamp,
+                                                    style = WdsTheme.typography.chatBody3,
+                                                    color = WdsTheme.colors.colorBubbleContentDeemphasized
+                                                )
+                                            }
+                                        } else {
+                                            // Longer messages - timestamp below
+                                            Column(
+                                                modifier = Modifier.padding(
+                                                    horizontal = WdsTheme.dimensions.wdsSpacingSingle,
+                                                    vertical = WdsTheme.dimensions.wdsSpacingHalfPlus
+                                                )
+                                            ) {
+                                                FormattedText(
+                                                    text = message.content,
+                                                    style = WdsTheme.typography.chatBody1,
+                                                    color = WdsTheme.colors.colorContentDefault,
+                                                    modifier = Modifier
+                                                )
+                                                Text(
+                                                    text = message.timestamp,
+                                                    style = WdsTheme.typography.chatBody3,
+                                                    color = WdsTheme.colors.colorBubbleContentDeemphasized,
+                                                    modifier = Modifier
+                                                        .align(Alignment.End)
+                                                        .padding(top = WdsTheme.dimensions.wdsSpacingQuarter)
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Link attachment cards
+                                if (message.attachments.isNotEmpty()) {
+                                    Spacer(modifier = Modifier.height(WdsTheme.dimensions.wdsSpacingHalfPlus))
+                                    LazyRow(
+                                        horizontalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingHalfPlus),
+                                        contentPadding = PaddingValues(horizontal = WdsTheme.dimensions.wdsSpacingQuarter)
+                                    ) {
+                                        items(message.attachments.size) { attachmentIndex ->
+                                            val attachment = message.attachments[attachmentIndex]
+                                            LinkAttachmentCard(
+                                                attachment = attachment,
+                                                onCardClick = { currentUriHandler.openUri(attachment.url) }
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -217,6 +298,26 @@ fun AssistantChatScreen(
                                     strokeWidth = 2.dp,
                                     color = WdsTheme.colors.colorContentDeemphasized
                                 )
+                            }
+                        }
+                    }
+
+                    // Suggested responses (only show when there's just the greeting and no loading)
+                    if (uiState.suggestedResponses.isNotEmpty() && uiState.messages.size == 1 && !uiState.isLoading) {
+                        item {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
+                                horizontalAlignment = Alignment.End,
+                                verticalArrangement = Arrangement.spacedBy(WdsTheme.dimensions.wdsSpacingHalfPlus)
+                            ) {
+                                uiState.suggestedResponses.forEach { suggestion ->
+                                    SuggestedResponseChip(
+                                        text = suggestion,
+                                        onClick = { viewModel.sendMessage(suggestion) }
+                                    )
+                                }
                             }
                         }
                     }
@@ -252,6 +353,111 @@ fun AssistantChatScreen(
 }
 
 @Composable
+private fun SuggestedResponseChip(
+    text: String,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .wrapContentSize() // Auto layout - hug width and height
+            .shadow(
+                elevation = WdsTheme.dimensions.wdsElevationSubtle,
+                spotColor = WdsTheme.colors.colorBubbleSurfaceOverlay,
+                ambientColor = WdsTheme.colors.colorBubbleSurfaceOverlay,
+                shape = WdsTheme.shapes.singlePlus
+            )
+            .clip(WdsTheme.shapes.singlePlus)
+            .background(Color.White.copy(alpha = 0.5f)) // White with 0.5 alpha transparency
+            .clickable(onClick = onClick)
+    ) {
+        Row(
+            modifier = Modifier.padding(
+                start = WdsTheme.dimensions.wdsSpacingSingle, // 16dp
+                end = WdsTheme.dimensions.wdsSpacingHalfPlus, // 8dp
+                top = WdsTheme.dimensions.wdsSpacingHalfPlus, // 8dp
+                bottom = WdsTheme.dimensions.wdsSpacingHalfPlus // 8dp
+            ),
+            horizontalArrangement = Arrangement.spacedBy(10.dp), // Gap of 10dp
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = text,
+                style = WdsTheme.typography.chatBody1,
+                color = WdsTheme.colors.colorContentDefault
+            )
+            Icon(
+                imageVector = Icons.Outlined.Send,
+                contentDescription = null,
+                tint = WdsTheme.colors.colorContentDeemphasized,
+                modifier = Modifier.size(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun LinkAttachmentCard(
+    attachment: LinkAttachment,
+    onCardClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .width(240.dp) // Less wide
+            .height(56.dp) // Same height as logo
+            .clip(RoundedCornerShape(12.dp)) // Rounder corners
+            .border(2.dp, Color.White, RoundedCornerShape(12.dp)) // 2dp white border
+            .background(WdsTheme.colors.colorBackgroundWashInset) // Using WDS gray color
+            .clickable(onClick = onCardClick)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // WhatsApp logo/icon - full bleed, fixed size
+            Box(
+                modifier = Modifier
+                    .width(56.dp)
+                    .fillMaxHeight()
+                    .background(Color.White),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_whatsapp_logo),
+                    contentDescription = "WhatsApp",
+                    tint = Color(0xFF25D366), // WhatsApp green tint
+                    modifier = Modifier.size(40.dp)
+                )
+            }
+
+            // Text content
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = WdsTheme.dimensions.wdsSpacingSingle),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = attachment.title,
+                    style = WdsTheme.typography.body2,
+                    color = WdsTheme.colors.colorContentDefault,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = attachment.domain,
+                    style = WdsTheme.typography.body3,
+                    color = WdsTheme.colors.colorContentDeemphasized,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun FormattedText(
     text: String,
     style: TextStyle,
@@ -259,16 +465,27 @@ private fun FormattedText(
     modifier: Modifier = Modifier
 ) {
     val uriHandler = LocalUriHandler.current
+
+    // Pre-process text to convert markdown bullets to bullet points
+    val processedText = text.split("\n").joinToString("\n") { line ->
+        val trimmedLine = line.trimStart()
+        when {
+            trimmedLine.startsWith("* ") -> "• ${trimmedLine.removePrefix("* ")}"
+            trimmedLine.startsWith("- ") -> "• ${trimmedLine.removePrefix("- ")}"
+            else -> line
+        }
+    }
+
     val annotatedString = buildAnnotatedString {
         var currentIndex = 0
         val boldRegex = """\*\*(.*?)\*\*""".toRegex()
         // Updated URL regex to exclude trailing punctuation
-        val urlRegex = """https?://[^\s)]+(?=[.!?,;:]?(?:\s|$))""".toRegex()
+        val urlRegex = """https?://[^\s)]+(?=[.!?,;:]?(?:\s|${'$'}))""".toRegex()
 
         // Find all bold text matches
-        val boldMatches = boldRegex.findAll(text).toList()
+        val boldMatches = boldRegex.findAll(processedText).toList()
         // Find all URL matches
-        val urlMatches = urlRegex.findAll(text).toList()
+        val urlMatches = urlRegex.findAll(processedText).toList()
 
         // Combine and sort all matches by start index
         val allMatches = (boldMatches + urlMatches).sortedBy { it.range.first }
@@ -276,7 +493,7 @@ private fun FormattedText(
         for (match in allMatches) {
             // Add text before this match
             if (currentIndex < match.range.first) {
-                append(text.substring(currentIndex, match.range.first))
+                append(processedText.substring(currentIndex, match.range.first))
             }
 
             when {
@@ -311,22 +528,34 @@ private fun FormattedText(
         }
 
         // Add remaining text
-        if (currentIndex < text.length) {
-            append(text.substring(currentIndex))
+        if (currentIndex < processedText.length) {
+            append(processedText.substring(currentIndex))
         }
     }
 
-    ClickableText(
-        text = annotatedString,
-        style = style.copy(color = color),
-        modifier = modifier,
-        onClick = { offset ->
-            annotatedString.getStringAnnotations(tag = "URL", start = offset, end = offset)
-                .firstOrNull()?.let { annotation ->
-                    uriHandler.openUri(annotation.item)
-                }
-        }
-    )
+    // Use Text instead of ClickableText for better line break support
+    if (annotatedString.getStringAnnotations("URL", 0, annotatedString.length).isEmpty()) {
+        // No URLs, use simple Text
+        Text(
+            text = annotatedString,
+            style = style,
+            color = color,
+            modifier = modifier
+        )
+    } else {
+        // Has URLs, use ClickableText
+        ClickableText(
+            text = annotatedString,
+            style = style.copy(color = color),
+            modifier = modifier,
+            onClick = { offset ->
+                annotatedString.getStringAnnotations(tag = "URL", start = offset, end = offset)
+                    .firstOrNull()?.let { annotation ->
+                        uriHandler.openUri(annotation.item)
+                    }
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -357,7 +586,7 @@ private fun AssistantChatTopBar(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = "Meta AI",
+                        text = "Business assistant",
                         style = WdsTheme.typography.chatHeaderTitle,
                         color = WdsTheme.colors.colorContentDefault
                     )
